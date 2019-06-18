@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="arithmetic.cpp" />
+    <ClCompile Include="..\core\pch.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{13462774-f461-464d-8137-4f5df73e21e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="arithmetic">
+      <UniqueIdentifier>{4998117b-a3e4-42cd-914d-37f24763a460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="streams">
+      <UniqueIdentifier>{a2ed5f5c-e1c9-41c8-b548-60b183d930a4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\core\pch.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\core\noncopyable.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\io_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\output_byte_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\input_byte_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\input_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\output_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\arithmetic.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\input_bit_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\output_bit_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\data_provider.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\file_data_provider.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\input_codepoint_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\output_codepoint_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\icu_file_data_provider.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\input_string_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\streams\output_string_stream.hpp">
+      <Filter>streams</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
