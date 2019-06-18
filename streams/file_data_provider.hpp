@@ -22,7 +22,7 @@ class file_data_provider : public data_provider<byte>
         string_type my_file_name;
 
     public:
-                    file_data_provider(const string_type& file_name);
+                    file_data_provider(const string_type& file_name, const wchar_t* mode);
         virtual    ~file_data_provider();
 
         bool        eof() const override;
@@ -33,14 +33,14 @@ class file_data_provider : public data_provider<byte>
         bool        put(const byte& value) override;
 };
 
-inline file_data_provider::file_data_provider(const string_type& file_name)
+inline file_data_provider::file_data_provider(const string_type& file_name, const wchar_t* mode)
                          : my_file(nullptr),
                            my_status(0),
                            my_file_name(file_name)
 {
     FILE* file(nullptr);
 
-    my_status = _wfopen_s(&file, file_name.c_str(), L"rb+");
+    my_status = _wfopen_s(&file, file_name.c_str(), mode);
 
     if(my_status == 0 && file != nullptr)
     {

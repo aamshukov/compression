@@ -28,7 +28,7 @@ class icu_file_data_provider : public data_provider<codepoint>
         string_type my_file_name;
 
     public:
-                    icu_file_data_provider(const string_type& file_name, const char* encoding);
+                    icu_file_data_provider(const string_type& file_name, const char* encoding, const char* mode);
         virtual    ~icu_file_data_provider();
 
         status_type status() const override;
@@ -39,12 +39,12 @@ class icu_file_data_provider : public data_provider<codepoint>
         bool        put(const codepoint& value) override;
 };
 
-inline icu_file_data_provider::icu_file_data_provider(const string_type& file_name, const char* encoding)
+inline icu_file_data_provider::icu_file_data_provider(const string_type& file_name, const char* encoding, const char* mode)
                              : my_file(nullptr),
                                my_status(0),
                                my_file_name(file_name)
 {
-    UFILE* ufile(u_fopen_u(reinterpret_cast<const UChar*>(my_file_name.c_str()), "rb+", nullptr, encoding));
+    UFILE* ufile(u_fopen_u(reinterpret_cast<const UChar*>(my_file_name.c_str()), mode, nullptr, encoding));
 
     my_status = ufile == nullptr;
 
