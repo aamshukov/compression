@@ -42,9 +42,6 @@
     <ClInclude Include="..\streams\output_stream.hpp">
       <Filter>streams</Filter>
     </ClInclude>
-    <ClInclude Include="..\arithmetic\arithmetic.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
     <ClInclude Include="..\streams\input_bit_stream.hpp">
       <Filter>streams</Filter>
     </ClInclude>
@@ -71,6 +68,15 @@
     </ClInclude>
     <ClInclude Include="..\streams\output_string_stream.hpp">
       <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\codec.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\simple_model.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\model.hpp">
+      <Filter>arithmetic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

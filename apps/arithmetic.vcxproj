@@ -213,7 +213,9 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\arithmetic\arithmetic.hpp" />
+    <ClInclude Include="..\arithmetic\codec.hpp" />
+    <ClInclude Include="..\arithmetic\model.hpp" />
+    <ClInclude Include="..\arithmetic\simple_model.hpp" />
     <ClInclude Include="..\core\noncopyable.hpp" />
     <ClInclude Include="..\core\pch.hpp" />
     <ClInclude Include="..\streams\data_provider.hpp" />
