@@ -25,7 +25,7 @@ class output_bit_stream : public output_stream<bit>
                            ~output_bit_stream();
 
         bool                eos() const override;
-        bool                write(const bit& value) override;
+        bool                write(const bit value) override;
 };
 
 template <typename D>
@@ -55,7 +55,7 @@ bool output_bit_stream<D>::eos() const
 }
 
 template <typename D>
-inline bool output_bit_stream<D>::write(const bit& value)
+inline bool output_bit_stream<D>::write(const bit value)
 {
     bool result = true;
 

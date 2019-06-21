@@ -40,7 +40,10 @@ bool output_codepoint_stream<D>::eos() const
 template <typename D>
 inline bool output_codepoint_stream<D>::write(const codepoint& value)
 {
-    bool result = (*my_data_provider).put(value);
+    static char_type bits[] = { L'0', L'1'};
+
+    bool result = (*my_data_provider).put(static_cast<codepoint>(bits[value]));
+
     return result;
 }
 

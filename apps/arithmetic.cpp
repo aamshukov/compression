@@ -31,37 +31,84 @@
 USINGNAMESPACE(compression)
 
 
+void test_string_input();
 void test_byte_input();
 //void test_codepoint_input();
 //void test_bit_input();
 
 int main()
 {
+    test_string_input();
     test_byte_input();
     //test_codepoint_input();
     //test_bit_input();
 }
 
+void test_string_input()
+{
+    using input_stream_type = input_string_stream<char_type>;
+    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(L"2320")); // 011011000
+
+    std::wcout << (*input_stream).data() << std::endl;
+
+    using output_stream_type = output_string_stream<char_type>;
+    std::shared_ptr<output_stream_type> output_stream(std::make_shared<output_stream_type>());
+
+    using integer_type = uint32_t;
+
+    using model_type = arithmetic::simple_model<char_type, integer_type>;
+
+    std::vector<integer_type> probability = { 3276, 3276, 32768, 26216 };
+    //std::vector<integer_type> probability = { 5, 5, 50, 40 };
+
+    std::shared_ptr<model_type> model(std::make_shared<model_type>(probability));
+
+    arithmetic::codec<char_type, integer_type, input_stream_type, output_stream_type> ac;
+
+    std::size_t original_size;
+    std::size_t encoded_size;
+
+    bool rc1 = ac.encode(model, input_stream, output_stream, original_size, encoded_size);
+    std::wcout << (*output_stream).data() << std::endl;
+
+    std::shared_ptr<input_stream_type> input_stream2(std::make_shared<input_stream_type>((*output_stream).data()));
+    std::shared_ptr<output_stream_type> output_stream2(std::make_shared<output_stream_type>());
+
+    bool rc2 = ac.decode(model, input_stream2, output_stream2, original_size);
+    std::wcout << (*output_stream2).data() << std::endl;
+
+    std::wcout << (rc2 ? L"ok" : L"error") << std::endl;
+}
+
 void test_byte_input()
 {
-    std::shared_ptr<file_data_provider> input_dp(std::make_shared<file_data_provider>(LR"(d:\tmp\data.txt)", L"rb"));
-    
-    using input_stream_type = input_byte_stream<file_data_provider>;
-    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(input_dp));
+    //std::shared_ptr<file_data_provider> input_dp(std::make_shared<file_data_provider>(LR"(d:\tmp\data.txt)", L"rb"));
+    //
+    //using input_stream_type = input_byte_stream<file_data_provider>;
+    //std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(input_dp));
 
-    std::shared_ptr<file_data_provider> output_dp(std::make_shared<file_data_provider>(LR"(d:\tmp\data.dat)", L"wb"));
-    using output_stream_type = output_bit_stream<file_data_provider>;
-    std::shared_ptr<output_stream_type> output_stream(std::make_shared<output_stream_type>(output_dp));
+    //std::shared_ptr<file_data_provider> output_dp(std::make_shared<file_data_provider>(LR"(d:\tmp\data.dat)", L"wb"));
+    //using output_stream_type = output_bit_stream<file_data_provider>;
+    //std::shared_ptr<output_stream_type> output_stream(std::make_shared<output_stream_type>(output_dp));
 
-    using integer_type = unsigned long long;
+    //using integer_type = uint64_t;
 
-    using model_type = arithmetic::simple_model<byte, integer_type>;
-    
-    std::shared_ptr<model_type> model(std::make_shared<model_type>());
+    //using model_type = arithmetic::simple_model<byte, integer_type>;
+    //
+    //std::shared_ptr<model_type> model(std::make_shared<model_type>());
 
-    arithmetic::codec<byte, input_stream_type, output_stream_type, integer_type> ac(input_stream, output_stream, model, 32, 1000);
+    //arithmetic::codec<byte, integer_type, input_stream_type, output_stream_type> ac(32, 1000);
 
-    ac;
+    //std::size_t original_size1;
+    //std::size_t encoded_size1;
+
+    //bool rc1 = ac.encode(model, input_stream, output_stream, original_size1, encoded_size1);
+
+    //std::size_t original_size2;
+    //std::size_t encoded_size2;
+
+    //bool rc2 = ac.decode(model, input_stream, output_stream, original_size2, encoded_size2);
+
 }
 
 //void test_codepoint_input()

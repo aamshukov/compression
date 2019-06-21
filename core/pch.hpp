@@ -32,6 +32,7 @@
 #include <optional>
 
 #include <algorithm>
+#include <numeric>
 #include <functional>
 #include <utility>
 #include <limits>

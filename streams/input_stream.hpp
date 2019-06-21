@@ -9,9 +9,11 @@
 BEGIN_NAMESPACE(compression)
 
 template <typename T>
-interface input_stream : public io_stream<T>
+interface input_stream : public io_stream
 {
-    virtual bool read(T& value) = 0;
+    using element_type = T;
+
+    virtual bool read(element_type& value) = 0;
 };
 
 END_NAMESPACE

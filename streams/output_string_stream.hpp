@@ -21,16 +21,24 @@ class output_string_stream : public output_stream<T>
         stream_type     my_stream;
 
     public:
-                        output_string_stream(const data_type& string);
+                        output_string_stream();
+
+        data_type       data() const;
 
         bool            eos() const override;
         bool            write(const datum_type& value) override;
 };
 
 template <typename T>
-inline output_string_stream<T>::output_string_stream(const data_type& string)
-                              : my_stream(string)
+inline output_string_stream<T>::output_string_stream()
+                              : my_stream(L"")
 {
+}
+
+template <typename T>
+inline typename output_string_stream<T>::data_type output_string_stream<T>::data() const
+{
+    return my_stream.str();
 }
 
 template <typename T>
@@ -40,9 +48,11 @@ bool output_string_stream<T>::eos() const
 }
 
 template <typename T>
-inline bool output_string_stream<T>::write(const typename output_string_stream<T>::datum_type& value)
+inline bool output_string_stream<T>::write(const datum_type& value)
 {
-    my_stream.put(value);
+    static char_type bits[] = { L'0', L'1'};
+
+    my_stream.put(static_cast<datum_type>(bits[value]));
 
     bool result = !(my_stream.fail() || my_stream.bad());
 

@@ -11,7 +11,7 @@ BEGIN_NAMESPACE(compression)
 template <typename T = char_type>
 class input_string_stream : public input_stream<T>
 {
-    private:
+    public:
         using datum_type = T;
 
         using data_type = std::basic_string<datum_type, std::char_traits<datum_type>, std::allocator<datum_type>>;
@@ -23,6 +23,8 @@ class input_string_stream : public input_stream<T>
     public:
                         input_string_stream(const data_type& string);
 
+        data_type       data() const;
+
         bool            eos() const override;
         bool            read(datum_type& value) override;
 };
@@ -31,6 +33,12 @@ template <typename T>
 inline input_string_stream<T>::input_string_stream(const data_type& string)
                              : my_stream(string)
 {
+}
+
+template <typename T>
+inline typename input_string_stream<T>::data_type input_string_stream<T>::data() const
+{
+    return my_stream.str();
 }
 
 template <typename T>

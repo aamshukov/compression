@@ -9,9 +9,11 @@
 BEGIN_NAMESPACE(compression)
 
 template <typename T>
-interface output_stream : public io_stream<T>
+interface output_stream : public io_stream
 {
-    virtual bool write(const T& value) = 0;
+    using element_type = T;
+
+    virtual bool write(const element_type& value) = 0;
 };
 
 END_NAMESPACE

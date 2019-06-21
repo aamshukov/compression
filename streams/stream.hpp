@@ -8,7 +8,6 @@
 
 BEGIN_NAMESPACE(compression)
 
-template <typename T>
 interface stream : private noncopyable
 {
     using status_type = int32_t;

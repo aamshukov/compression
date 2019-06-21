@@ -8,11 +8,10 @@
 
 BEGIN_NAMESPACE(compression)
 
-template <typename T>
-class io_stream : public stream<T>
+class io_stream : public stream
 {
     public:
-        using status_type = stream<T>::status_type;
+        using status_type = stream::status_type;
 
     protected:
         status_type my_status;
@@ -23,14 +22,12 @@ class io_stream : public stream<T>
         status_type status() const override;
 };
 
-template <typename T>
-inline io_stream<T>::io_stream()
-                   : my_status(0)
+inline io_stream::io_stream()
+                : my_status(0)
 {
 }
 
-template <typename T>
-inline typename io_stream<T>::status_type io_stream<T>::status() const
+inline typename io_stream::status_type io_stream::status() const
 {
     return my_status;
 }
