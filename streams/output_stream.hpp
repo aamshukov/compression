@@ -13,6 +13,7 @@ interface output_stream : public io_stream
 {
     using element_type = T;
 
+    virtual bool write(bit value) = 0;
     virtual bool write(const element_type& value) = 0;
 };
 

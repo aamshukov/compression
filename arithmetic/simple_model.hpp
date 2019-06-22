@@ -1,9 +1,6 @@
 //..............................
 // UI Lab Inc. Arthur Amshukov .
 //..............................
-// based on mathematicalmonk's videos
-// https://www.youtube.com/playlist?list=PLE125425EC837021F
-//
 #ifndef __COMPRESSION_ARITHMETIC_SIMPLE_MODEL_H__
 #define __COMPRESSION_ARITHMETIC_SIMPLE_MODEL_H__
 
@@ -18,7 +15,7 @@ class simple_model : public model<ElementType, IntegerType>
         using integer_type = model<ElementType, IntegerType>::integer_type;
         using element_type = model<ElementType, IntegerType>::element_type;
 
-        using abc_type = model<element_type, integer_type>::abc_type;
+        using abc_type = model<ElementType, IntegerType>::abc_type;
 
         using probability_type = std::vector<integer_type>;
 
@@ -30,8 +27,10 @@ class simple_model : public model<ElementType, IntegerType>
 
         integer_type        my_r;
 
+        abc_type            my_abc;
+
     public:
-                            simple_model(const probability_type& p); // probability
+                            simple_model(const probability_type& p, const abc_type& abc); // probability
 
         integer_type        c_by_symbol(const element_type& symbol) override;
         integer_type        d_by_symbol(const element_type& symbol) override;
@@ -43,12 +42,14 @@ class simple_model : public model<ElementType, IntegerType>
 
         abc_type            abc() const override;
 
+        element_type        symbol_by_index(std::size_t index) override;
+
         void                update() override;
 };
 
 template <typename ElementType, typename IntegerType>
-inline simple_model<ElementType, IntegerType>::simple_model(const probability_type& p)
-    : my_p(p), my_r(0)
+inline simple_model<ElementType, IntegerType>::simple_model(const probability_type& p, const abc_type& abc)
+    : my_p(p), my_r(0), my_abc(abc)
 {
     // c(0) = 0, c(j) = r(0) + ... + r(j-1) for j = 1, ..., n
     my_c.resize(p.size());
@@ -83,50 +84,14 @@ inline simple_model<ElementType, IntegerType>::simple_model(const probability_ty
 template <typename ElementType, typename IntegerType>
 inline typename simple_model<ElementType, IntegerType>::integer_type simple_model<ElementType, IntegerType>::c_by_symbol(const element_type& symbol)
 {
-    integer_type result = -1; //??
-
-    if(symbol == L'0')
-    {
-        result = my_c[0];
-    }
-    else if(symbol == L'1')
-    {
-        result = my_c[1];
-    }
-    else if(symbol == L'2')
-    {
-        result = my_c[2];
-    }
-    else if(symbol == L'3')
-    {
-        result = my_c[3];
-    }
-
+    integer_type result = my_c[(*abc()).index_by_symbol(symbol)];
     return result;
 }
 
 template <typename ElementType, typename IntegerType>
 inline typename simple_model<ElementType, IntegerType>::integer_type simple_model<ElementType, IntegerType>::d_by_symbol(const element_type& symbol)
 {
-    integer_type result = -1; //??
-
-    if(symbol == L'0')
-    {
-        result = my_d[0];
-    }
-    else if(symbol == L'1')
-    {
-        result = my_d[1];
-    }
-    else if(symbol == L'2')
-    {
-        result = my_d[2];
-    }
-    else if(symbol == L'3')
-    {
-        result = my_d[3];
-    }
-
+    integer_type result = my_d[(*abc()).index_by_symbol(symbol)];
     return result;
 }
 
@@ -151,7 +116,14 @@ inline typename simple_model<ElementType, IntegerType>::integer_type simple_mode
 template <typename ElementType, typename IntegerType>
 typename simple_model<ElementType, IntegerType>::abc_type typename simple_model<ElementType, IntegerType>::abc() const
 {
-    return { L'0', L'1', L'2', L'3' };
+    return my_abc;
+}
+
+template <typename ElementType, typename IntegerType>
+inline typename simple_model<ElementType, IntegerType>::element_type simple_model<ElementType, IntegerType>::symbol_by_index(std::size_t index)
+{
+    element_type result = (*abc()).symbol_by_index(index);
+    return result;
 }
 
 template <typename ElementType, typename IntegerType>

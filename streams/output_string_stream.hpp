@@ -26,6 +26,8 @@ class output_string_stream : public output_stream<T>
         data_type       data() const;
 
         bool            eos() const override;
+
+        bool            write(bit value) override;
         bool            write(const datum_type& value) override;
 };
 
@@ -48,11 +50,21 @@ bool output_string_stream<T>::eos() const
 }
 
 template <typename T>
-inline bool output_string_stream<T>::write(const datum_type& value)
+inline bool output_string_stream<T>::write(bit value)
 {
     static char_type bits[] = { L'0', L'1'};
 
     my_stream.put(static_cast<datum_type>(bits[value]));
+
+    bool result = !(my_stream.fail() || my_stream.bad());
+
+    return result;
+}
+
+template <typename T>
+inline bool output_string_stream<T>::write(const datum_type& value)
+{
+    my_stream.put(static_cast<datum_type>(value));
 
     bool result = !(my_stream.fail() || my_stream.bad());
 

@@ -21,6 +21,8 @@ class output_codepoint_stream : public output_stream<codepoint>
                             output_codepoint_stream(const data_provider_type& data_provider);
 
         bool                eos() const override;
+
+        bool                write(bit value) override;
         bool                write(const codepoint& value) override;
 
 };
@@ -38,12 +40,19 @@ bool output_codepoint_stream<D>::eos() const
 }
 
 template <typename D>
-inline bool output_codepoint_stream<D>::write(const codepoint& value)
+inline bool output_codepoint_stream<D>::write(bit value)
 {
     static char_type bits[] = { L'0', L'1'};
 
     bool result = (*my_data_provider).put(static_cast<codepoint>(bits[value]));
 
+    return result;
+}
+
+template <typename D>
+inline bool output_codepoint_stream<D>::write(const codepoint& value)
+{
+    bool result = (*my_data_provider).put(static_cast<codepoint>(value));
     return result;
 }
 

@@ -78,5 +78,11 @@
     <ClInclude Include="..\arithmetic\model.hpp">
       <Filter>arithmetic</Filter>
     </ClInclude>
+    <ClInclude Include="..\arithmetic\simple_abc.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\abc.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

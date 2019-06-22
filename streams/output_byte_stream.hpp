@@ -21,6 +21,8 @@ class output_byte_stream : public output_stream<byte>
                             output_byte_stream(const data_provider_type& data_provider);
 
         bool                eos() const override;
+
+        bool                write(bit value) override;
         bool                write(const byte& value) override;
 };
 
@@ -34,6 +36,13 @@ template <typename D>
 bool output_byte_stream<D>::eos() const
 {
     return (*my_data_provider).eof();
+}
+
+template <typename D>
+inline bool output_byte_stream<D>::write(bit value)
+{
+    bool result = (*my_data_provider).put(static_cast<byte>(value));
+    return result;
 }
 
 template <typename D>

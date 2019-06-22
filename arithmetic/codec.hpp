@@ -128,13 +128,13 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
             if(b < my_half)
             {
                 // emit zero
-                (*output_stream).write(0);
+                (*output_stream).write(static_cast<bit>(0));
                 enc_size++;
 
                 // emit s ones
                 for(int k = 0; k < s; k++)
                 {
-                    (*output_stream).write(1);
+                    (*output_stream).write(static_cast<bit>(1));
                     enc_size++;
                 }
 
@@ -147,13 +147,13 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
             else if(a > my_half)
             {
                 // emit one
-                (*output_stream).write(1);
+                (*output_stream).write(static_cast<bit>(1));
                 enc_size++;
 
                 // emit s zeros
                 for(int k = 0; k < s; k++)
                 {
-                    (*output_stream).write(0);
+                    (*output_stream).write(static_cast<bit>(0));
                     enc_size++;
                 }
 
@@ -178,26 +178,26 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
     if(a <= my_quarter)
     {
         // emit zero
-        (*output_stream).write(0);
+        (*output_stream).write(static_cast<bit>(0));
         enc_size++;
 
         // emit s ones
         for(int k = 0; k < s; k++)
         {
-            (*output_stream).write(1);
+            (*output_stream).write(static_cast<bit>(1));
             enc_size++;
         }
     }
     else
     {
         // emit one
-        (*output_stream).write(1);
+        (*output_stream).write(static_cast<bit>(1));
         enc_size++;
 
         // emit s zeros
         for(int k = 0; k < s; k++)
         {
-            (*output_stream).write(0);
+            (*output_stream).write(static_cast<bit>(0));
             enc_size++;
         }
     }
@@ -233,7 +233,11 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
             break;
         }
 
-        if(symbol == L'1') //??
+#ifdef _DEBUG
+        if(symbol == 1 || symbol == L'1')
+#else
+        if(symbol == 1)
+#endif
         {
             z = z + (1 << (my_precision - i));
         }
@@ -242,7 +246,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
     }
 
     // abc
-    auto abc = (*model).abc();
+    std::size_t abc_size = (*(*model).abc()).data().size();
 
     // decode
     std::size_t decoded_size = 0;
@@ -265,7 +269,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
     for(;;)
     {
         // decode symbol
-        for(std::size_t j = 0, n = abc.size(); j < n; j++) // over all alphabet symbols (chunks)
+        for(std::size_t j = 0, n = abc_size; j < n; j++) // over all alphabet symbols (chunks)
         {
             w = b - a;
 
@@ -287,7 +291,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
             if(a0 <= z && z < b0)
             {
                 // emit j
-                (*output_stream).write(static_cast<element_type>(j)); //??
+                (*output_stream).write((*model).symbol_by_index(j));
 
                 decoded_size++;
 
@@ -323,7 +327,11 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
                 s = 0;
             }
 
-            if((*input_stream).read(symbol) && symbol == '1') //??
+#ifdef _DEBUG
+            if((*input_stream).read(symbol) && (symbol == 1 || symbol == '1'))
+#else
+            if((*input_stream).read(symbol) && symbol == 1)
+#endif
             {
                 z = z + 1;
             }
@@ -335,7 +343,11 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
             b = 2 * (b - my_quarter);
             z = 2 * (z - my_quarter);
 
-            if((*input_stream).read(symbol) && symbol == '1') //??
+#ifdef _DEBUG
+            if((*input_stream).read(symbol) && (symbol == 1 || symbol == '1'))
+#else
+            if((*input_stream).read(symbol) && symbol == 1)
+#endif
             {
                 z = z + 1;
             }
