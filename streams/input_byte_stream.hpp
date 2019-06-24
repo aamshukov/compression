@@ -31,7 +31,7 @@ inline input_byte_stream<D>::input_byte_stream(const data_provider_type& data_pr
 }
 
 template <typename D>
-bool input_byte_stream<D>::eos() const
+inline bool input_byte_stream<D>::eos() const
 {
     return (*my_data_provider).eof();
 }

@@ -42,7 +42,7 @@ inline typename input_string_stream<T>::data_type input_string_stream<T>::data()
 }
 
 template <typename T>
-bool input_string_stream<T>::eos() const
+inline bool input_string_stream<T>::eos() const
 {
     return my_stream.eof();
 }

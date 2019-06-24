@@ -15,6 +15,8 @@ interface output_stream : public io_stream
 
     virtual bool write(bit value) = 0;
     virtual bool write(const element_type& value) = 0;
+
+    virtual void flush() = 0;
 };
 
 END_NAMESPACE

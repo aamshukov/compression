@@ -37,6 +37,8 @@ class icu_file_data_provider : public data_provider<codepoint>
 
         bool        get(codepoint& value) override;
         bool        put(const codepoint& value) override;
+
+        void        flush() override;
 };
 
 inline icu_file_data_provider::icu_file_data_provider(const string_type& file_name, const char* encoding, const char* mode)
@@ -111,6 +113,14 @@ inline bool icu_file_data_provider::put(const codepoint& value)
     }
 
     return result;
+}
+
+inline void icu_file_data_provider::flush()
+{
+    if(my_status == 0 && my_file != nullptr)
+    {
+        u_fflush(my_file);
+    }
 }
 
 END_NAMESPACE

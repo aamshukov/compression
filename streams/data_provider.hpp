@@ -18,6 +18,8 @@ interface data_provider : private noncopyable
 
     virtual bool get(T& value) = 0;
     virtual bool put(const T& value) = 0;
+
+    virtual void flush() = 0;
 };
 
 END_NAMESPACE

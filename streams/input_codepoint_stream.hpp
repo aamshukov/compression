@@ -31,7 +31,7 @@ inline input_codepoint_stream<D>::input_codepoint_stream(const data_provider_typ
 }
 
 template <typename D>
-bool input_codepoint_stream<D>::eos() const
+inline bool input_codepoint_stream<D>::eos() const
 {
     return (*my_data_provider).eof();
 }

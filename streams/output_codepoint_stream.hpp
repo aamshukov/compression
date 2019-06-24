@@ -25,6 +25,7 @@ class output_codepoint_stream : public output_stream<codepoint>
         bool                write(bit value) override;
         bool                write(const codepoint& value) override;
 
+        void                flush() override;
 };
 
 template <typename D>
@@ -34,7 +35,7 @@ inline output_codepoint_stream<D>::output_codepoint_stream(const data_provider_t
 }
 
 template <typename D>
-bool output_codepoint_stream<D>::eos() const
+inline bool output_codepoint_stream<D>::eos() const
 {
     return (*my_data_provider).eof();
 }
@@ -54,6 +55,12 @@ inline bool output_codepoint_stream<D>::write(const codepoint& value)
 {
     bool result = (*my_data_provider).put(static_cast<codepoint>(value));
     return result;
+}
+
+template <typename D>
+inline void output_codepoint_stream<D>::flush()
+{
+    (*my_data_provider).flush();
 }
 
 END_NAMESPACE

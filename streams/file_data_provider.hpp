@@ -31,6 +31,8 @@ class file_data_provider : public data_provider<byte>
 
         bool        get(byte& value) override;
         bool        put(const byte& value) override;
+
+        void        flush() override;
 };
 
 inline file_data_provider::file_data_provider(const string_type& file_name, const wchar_t* mode)
@@ -101,6 +103,14 @@ inline bool file_data_provider::put(const byte& value)
     }
 
     return result;
+}
+
+inline void file_data_provider::flush()
+{
+    if(my_status == 0 && my_file != nullptr)
+    {
+        fflush(my_file);
+    }
 }
 
 END_NAMESPACE

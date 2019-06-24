@@ -19,11 +19,14 @@ class output_byte_stream : public output_stream<byte>
 
     public:
                             output_byte_stream(const data_provider_type& data_provider);
+                           ~output_byte_stream();
 
         bool                eos() const override;
 
         bool                write(bit value) override;
         bool                write(const byte& value) override;
+
+        void                flush() override;
 };
 
 template <typename D>
@@ -33,7 +36,13 @@ inline output_byte_stream<D>::output_byte_stream(const data_provider_type& data_
 }
 
 template <typename D>
-bool output_byte_stream<D>::eos() const
+inline output_byte_stream<D>::~output_byte_stream()
+{
+    flush();
+}
+
+template <typename D>
+inline bool output_byte_stream<D>::eos() const
 {
     return (*my_data_provider).eof();
 }
@@ -50,6 +59,12 @@ inline bool output_byte_stream<D>::write(const byte& value)
 {
     bool result = (*my_data_provider).put(value);
     return result;
+}
+
+template <typename D>
+inline void output_byte_stream<D>::flush()
+{
+    (*my_data_provider).flush();
 }
 
 END_NAMESPACE
