@@ -31,20 +31,25 @@
 #include <arithmetic/simple_abc.hpp>
 #include <arithmetic/simple_model.hpp>
 
+#include <arithmetic/binary_abc.hpp>
+#include <arithmetic/binary_model.hpp>
+
 USINGNAMESPACE(compression)
 
 
-void test_string_input();
+void test_binary_model();
+void test_simple_model();
 
 int main()
 {
-    test_string_input();
+    test_binary_model();
+    test_simple_model();
 }
 
-void test_string_input()
+void test_binary_model()
 {
     using input_stream_type = input_string_stream<char_type>;
-    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(L"2320")); // 011011000
+    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(L"1111000"));
 
     std::wcout << (*input_stream).data() << std::endl;
 
@@ -53,10 +58,9 @@ void test_string_input()
 
     using integer_type = uint32_t;
 
-    using model_type = arithmetic::simple_model<char_type, integer_type>;
+    using model_type = arithmetic::binary_model<char_type, integer_type>;
 
-    std::vector<integer_type> probability = { 3276, 3276, 32768, 26216 };
-    //std::vector<integer_type> probability = { 5, 5, 50, 40 };
+    std::vector<integer_type> probability = { 32767, 32768 };
 
     auto abc(std::make_shared<arithmetic::simple_abc<>>());
     std::shared_ptr<model_type> model(std::make_shared<model_type>(probability, abc));
@@ -75,5 +79,42 @@ void test_string_input()
     bool rc2 = ac.decode(model, input_stream2, output_stream2, original_size);
     std::wcout << (*output_stream2).data() << std::endl;
 
-    std::wcout << (rc2 ? L"ok" : L"error") << std::endl;
+    std::wcout << (rc2 && ((*input_stream).data() == (*output_stream2).data()) ? L"ok" : L"error") << std::endl << std::endl;
+}
+
+void test_simple_model()
+{
+    using input_stream_type = input_string_stream<char_type>;
+    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(L"2320")); // 011011000
+
+    std::wcout << (*input_stream).data() << std::endl;
+
+    using output_stream_type = output_string_stream<char_type>;
+    std::shared_ptr<output_stream_type> output_stream(std::make_shared<output_stream_type>());
+
+    using integer_type = uint32_t;
+
+    using model_type = arithmetic::simple_model<char_type, integer_type>;
+
+    std::vector<integer_type> probability = { 3276, 3276, 32768, 26215 };
+    //std::vector<integer_type> probability = { 5, 5, 50, 40 }; // 0.0, 0.05, 0.1, 0.6
+
+    auto abc(std::make_shared<arithmetic::simple_abc<>>());
+    std::shared_ptr<model_type> model(std::make_shared<model_type>(probability, abc));
+
+    arithmetic::codec<char_type, integer_type, input_stream_type, output_stream_type> ac;
+
+    std::size_t original_size;
+    std::size_t encoded_size;
+
+    bool rc1 = ac.encode(model, input_stream, output_stream, original_size, encoded_size);
+    std::wcout << (*output_stream).data() << std::endl;
+
+    std::shared_ptr<input_stream_type> input_stream2(std::make_shared<input_stream_type>((*output_stream).data()));
+    std::shared_ptr<output_stream_type> output_stream2(std::make_shared<output_stream_type>());
+
+    bool rc2 = ac.decode(model, input_stream2, output_stream2, original_size);
+    std::wcout << (*output_stream2).data() << std::endl;
+
+    std::wcout << (rc2 && ((*input_stream).data() == (*output_stream2).data()) ? L"ok" : L"error") << std::endl << std::endl;
 }

@@ -214,6 +214,8 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\arithmetic\abc.hpp" />
+    <ClInclude Include="..\arithmetic\binary_abc.hpp" />
+    <ClInclude Include="..\arithmetic\binary_model.hpp" />
     <ClInclude Include="..\arithmetic\codec.hpp" />
     <ClInclude Include="..\arithmetic\model.hpp" />
     <ClInclude Include="..\arithmetic\simple_abc.hpp" />

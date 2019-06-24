@@ -44,7 +44,8 @@ class simple_model : public model<ElementType, IntegerType>
 
         element_type        symbol_by_index(std::size_t index) override;
 
-        void                update() override;
+        void                update(const element_type& symbol) override;
+        void                reset() override;
 };
 
 template <typename ElementType, typename IntegerType>
@@ -127,9 +128,15 @@ inline typename simple_model<ElementType, IntegerType>::element_type simple_mode
 }
 
 template <typename ElementType, typename IntegerType>
-inline void simple_model<ElementType, IntegerType>::update()
+inline void simple_model<ElementType, IntegerType>::update(const element_type&)
 {
     // static model, nothing to update
+}
+
+template <typename ElementType, typename IntegerType>
+inline void simple_model<ElementType, IntegerType>::reset()
+{
+    // static model, nothing to reset
 }
 
 END_NAMESPACE

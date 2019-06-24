@@ -29,7 +29,9 @@ interface model : private noncopyable
 
     virtual element_type symbol_by_index(std::size_t index) = 0;
 
-    virtual void update() = 0;
+    virtual void update(const element_type& symbol) = 0;
+
+    virtual void reset() = 0;
 };
 
 END_NAMESPACE

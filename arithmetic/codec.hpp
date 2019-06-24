@@ -74,6 +74,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
     original_size = 0;
     encoded_size = 0;
 
+    (*model).reset();
+
     bool result = true;
 
     std::size_t org_size = 0;
@@ -119,8 +121,6 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
 
         b = a + (w * d) / R;
         a = a + (w * c) / R;
-
-        (*model).update(); // update c and d
 
         // rescale and emit
         while(b < my_half || a > my_half)
@@ -171,6 +171,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
 
             s = s + 1;
         }
+
+        (*model).update(symbol); // update c and d
     }
 
     s = s + 1; // one more time
@@ -217,6 +219,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
                                                                                const output_stream_type& output_stream,
                                                                                std::size_t original_size)
 {
+    (*model).reset();
+
     bool result = true;
 
     element_type symbol;
@@ -286,22 +290,24 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
             b0 = a + (w * d) / R;
             a0 = a + (w * c) / R;
 
-            (*model).update(); // update c and d
-
             if(a0 <= z && z < b0)
             {
+                symbol = (*model).symbol_by_index(j);
+
                 // emit j
-                (*output_stream).write((*model).symbol_by_index(j));
+                (*output_stream).write(symbol);
 
                 decoded_size++;
-
-                a = a0;
-                b = b0;
 
                 if(decoded_size == original_size)
                 {
                     goto _exit;
                 }
+
+                a = a0;
+                b = b0;
+
+                (*model).update(symbol); // update c and d
 
                 break; // considered this chunk, need to break
             }
