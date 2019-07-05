@@ -3,9 +3,8 @@
 //..............................
 // Suffix array construction by induced sorting (SA-IS)
 // based on:
-//  'Linear Suffix Array Construction by Almost Pure Induced-Sorting' Nong, G., Zhang, S. and Chan, W. Data Compression Conference, 2009
-//
-// ... and on awesome explanation https://zork.net/~st/jottings/sais.html (thanks!)
+//      I. 'Linear Suffix Array Construction by Almost Pure Induced-Sorting' Nong, G., Zhang, S. and Chan, W. Data Compression Conference, 2009
+//      II. and on awesome explanation https://zork.net/~st/jottings/sais.html (thanks!)
 //
 #ifndef __COMPRESSION_SUFFIX_ARRAY_H__
 #define __COMPRESSION_SUFFIX_ARRAY_H__
@@ -30,7 +29,7 @@ class suffix_array : private noncopyable
 
         using size_type = int;
 
-        using types_type = std::vector<bool>; // t
+        using types_type = std::vector<bool>; // type map
 
     public:
         enum class algorithm
@@ -175,7 +174,6 @@ bool suffix_array<ElementType, Traits>::build_sa_is(const typename suffix_array<
     //  c ... c e
     //  chars   sentinel = 0
     // virtual sentinel is an empty suffix
-
     bool result = true;
 
     size_type n = static_cast<size_type>(string.size()); // includes +1 for virtual sentinel
@@ -207,11 +205,11 @@ bool suffix_array<ElementType, Traits>::build_sa_is(const typename suffix_array<
     // rearrange LMS suffixes, approximate positions
     indices_type lms_sufixes;
 
-    arrange_lms(string, type_map, buckets_tails, lms_sufixes);
+    arrange_lms(string, type_map, buckets_tails, lms_sufixes); // I. 2.3:1
 
     // rearrange all other (non-LMS) suffixes, might move sa indices around
-    induce_sort_ltype(string, type_map, buckets_heads, lms_sufixes);
-    induce_sort_stype(string, type_map, buckets_tails, lms_sufixes);
+    induce_sort_ltype(string, type_map, buckets_heads, lms_sufixes); // I. 2.3:2
+    induce_sort_stype(string, type_map, buckets_tails, lms_sufixes); // I. 2.3:3
 
     // simplify to S1 ...
     elements_type new_string;
@@ -267,7 +265,6 @@ inline bool suffix_array<ElementType, Traits>::are_lms_strings_equal(const typen
     //
     // Definition 2.2. (LMS-substring) A LMS-substring is (i) a substring S[i..j] with both S[i] and S[j] being LMS characters,
     // and there is no other LMS character in the substring, for i != j; or (ii) the sentinel itself.
-
     bool result = true;
 
     size_type n = static_cast<size_type>(string.size()); // includes +1 for virtual sentinel
@@ -321,7 +318,6 @@ inline void suffix_array<ElementType, Traits>::build_type_map(const typename suf
     // builds S/L-type map
     //  t: array [0 ... n] of booleans to represent the S-type and L-type vector,
     //  original paper has [0 ... n - 1] but in our case we have n + 1 elements, + 1 for virtual sentinel
-
     size_type n = static_cast<size_type>(string.size()); // includes +1 for virtual sentinel
 
     type_map.resize(n);
@@ -393,7 +389,6 @@ void suffix_array<ElementType, Traits>::arrange_lms(const typename suffix_array<
     //                                  |  |  | first insertion
     //                                  |  | second insertion
     //                                  | third insertion
-
     size_type n = static_cast<size_type>(string.size()); // includes +1 for virtual sentinel
 
     suffixes.resize(n);
@@ -428,7 +423,6 @@ void suffix_array<ElementType, Traits>::induce_sort_ltype(const typename suffix_
                                                           typename suffix_array<ElementType, Traits>::indices_type& suffixes)
 {
     // scanning through the suffix array from left-to-right arranging l-type suffixes ...
-
     indices_type heads;
 
     heads.swap(buckets_heads);
@@ -470,7 +464,6 @@ void suffix_array<ElementType, Traits>::induce_sort_stype(const typename suffix_
                                                           typename suffix_array<ElementType, Traits>::indices_type& suffixes)
 {
     // scanning through the suffix array from right-to-left arranging s-type suffixes ...
-
     indices_type tails;
 
     tails.swap(buckets_tails);
@@ -507,7 +500,6 @@ void suffix_array<ElementType, Traits>::simplify_suffix_array(const typename suf
 {
     // ... Name each LMS-substring in S by its bucket index to get a new shortened string S1
     // ... Get lexicographical names of all (sorted) LMS-substrings and create S1
-    
     size_type n = static_cast<size_type>(string.size()); // includes +1 for virtual sentinel
 
     // collect

@@ -12,7 +12,8 @@ int main()
     //string_type str(L"mmiissiissiippii$");
 
     //string_type str(L"cabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbagecabbage");
-    string_type str(L"caabage");
+    string_type str(L"cabbage");
+//    string_type str(L"caabage");
     //string_type str(L"rikki-tikki-tikka");
 
     //string_type str(L"baabaabac");
