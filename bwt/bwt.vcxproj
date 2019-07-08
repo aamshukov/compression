@@ -211,6 +211,7 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
   <ItemGroup>
     <ClInclude Include="..\core\noncopyable.hpp" />
     <ClInclude Include="..\core\pch.hpp" />
+    <ClInclude Include="bwt.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

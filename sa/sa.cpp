@@ -2,7 +2,7 @@
 #include <core/noncopyable.hpp>
 
 #include <sa/sa.hpp>
-//
+
 USINGNAMESPACE(compression)
 
 

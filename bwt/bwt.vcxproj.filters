@@ -21,5 +21,8 @@
     <ClInclude Include="..\core\pch.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="bwt.hpp">
+      <Filter>bwt</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
