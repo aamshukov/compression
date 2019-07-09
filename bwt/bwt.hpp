@@ -6,8 +6,7 @@
 
 #pragma once
 
-BEGIN_NAMESPACE(compression::bwt)
-USINGNAMESPACE(compression)
+BEGIN_NAMESPACE(compression)
 
 template <typename ElementType, typename Traits>
 class bwt : private noncopyable
@@ -43,7 +42,7 @@ inline bool bwt<ElementType, Traits>::encode(const typename bwt<ElementType, Tra
 
     indices_type suffixes;
 
-    sa::suffix_array<element_type, traits_type>::build(raw_data, suffixes);
+    algorithms::suffix_array<element_type, traits_type>::build(raw_data, suffixes);
 
     size_type m = static_cast<size_type>(suffixes.size());
 

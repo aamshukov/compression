@@ -1,11 +1,10 @@
 #include <core/pch.hpp>
 #include <core/noncopyable.hpp>
 
-#include <sa/sa.hpp>
+#include <suffixarray/suffixarray.hpp>
 #include <bwt/bwt.hpp>
 
 USINGNAMESPACE(compression)
-
 
 int main()
 {
@@ -20,7 +19,7 @@ int main()
     std::string str("mmiissiissiippii");
     //std::string str("DRDOBBS");
 
-    using bwt_type = bwt::bwt<byte, sa_traits>;
+    using bwt_type = bwt<byte, sa_traits>;
 
     bwt_type::elements_type data(str.begin(), str.end());
     data.push_back(0); // add virtual sentinel
