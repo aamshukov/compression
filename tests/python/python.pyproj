@@ -5,7 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{53a1f093-b1aa-478b-9bd2-aba3dc4d1f53}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>bwt.decode.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>

@@ -85,8 +85,6 @@ inline bool bwt<ElementType, Traits>::decode(const typename bwt<ElementType, Tra
     //  return S
     bool result = true;
 
-    size_type n = static_cast<size_type>(encoded_data.size()); // includes +1 for virtual sentinel
-
     //  A <- array of size n
     std::vector<std::pair<element_type, index_type>> sorted_data;
 
@@ -100,15 +98,17 @@ inline bool bwt<ElementType, Traits>::decode(const typename bwt<ElementType, Tra
                       sorted_data.emplace_back(std::make_pair(element, k++));
                   });
 
-    //  Stably sort A by first entry
-    std::sort(sorted_data.begin(),
-              sorted_data.end(),
-              [](const auto& entry1, const auto& entry2)
-              {
-                  return std::get<0>(entry1) < std::get<0>(entry2);
-              });
+    //  Stably (MUST BE STABLE) sort A by first entry
+    std::stable_sort(sorted_data.begin(),
+                     sorted_data.end(),
+                     [](const auto& entry1, const auto& entry2)
+                     {
+                         return std::get<0>(entry1) < std::get<0>(entry2);
+                     });
 
     //  S <- empty string
+    size_type n = static_cast<size_type>(encoded_data.size()); // includes +1 for virtual sentinel
+
     decoded_data.resize(n);
 
     //  for j = 0 to n
@@ -127,11 +127,11 @@ inline bool bwt<ElementType, Traits>::decode(const typename bwt<ElementType, Tra
     //      j <- second entry of A[j]
     //      append C[j] to S
     //  until C[j] = $
-    for(index_type i = 0, k = 0; i < n; i++, k++) // guarding against missing $
+    for(index_type i = 0; i < n; i++) // guarding against missing $
     {
         j = std::get<1>(sorted_data[j]);
 
-        decoded_data[k] = encoded_data[j];
+        decoded_data[i] = encoded_data[j];
 
         if(encoded_data[j] == element_type(0))
         {
