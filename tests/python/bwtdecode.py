@@ -1,3 +1,5 @@
+﻿import os
+
 #  https://www.student.cs.uwaterloo.ca/~cs240/f18/modules/module10.pdf
 
 #  BWT-decoding(C[0..n − 1])

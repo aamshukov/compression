@@ -17,6 +17,7 @@ int main()
     };
 
     //std::string str("mmiissiissiippii");
+    std::string str("0238175469234180579602381754692341805796");
     //std::string str("23424132214321233132212413414343");
     //std::string str("23424132214321233132212413414343");
     //std::string str("abracadabra");
@@ -25,9 +26,7 @@ int main()
 
     //std::string str("2342413221432123");
     //std::string str("3132212413414314");
-    std::string str("4143212212413213");
-
-
+    //std::string str("4143212212413213");
 
     using bwt_type = bwt<byte, sa_traits>;
 

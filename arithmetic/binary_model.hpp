@@ -116,14 +116,14 @@ inline void binary_model<ElementType, IntegerType>::update(const element_type& s
 
     if(symbol == '0')
     {
-        probability = { 16384, 49151 };
+        probability = { 49151, 16384 };
     }
     else if(symbol == '1')
     {
-        probability = { 49151, 16384 };
+        probability = { 16384, 49151 };
     }
 
-    calculate_cd(probability);
+    //calculate_cd(probability);
 }
 
 template <typename ElementType, typename IntegerType>

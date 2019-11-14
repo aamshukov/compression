@@ -13,8 +13,28 @@ def generate():
                 stream.write('\n')
 
 
+def generate_vectors():
+    from random import seed
+    from random import randint
+    n = 256
+    with open(r'd:\tmp\pf.slices.gen.txt', 'w') as stream:
+        for k in range(16):
+            l = n - 16 * k
+            z = [0] * l
+            p = []
+            for i in range(16):
+                c = randint(0, l - 1)
+                if c not in p:
+                    p.append(c)
+                    z[c] = 1
+            s = ''.join(str(x) for x in z) + '\n'
+            print(s)
+            stream.write(s)
+
+
 def main(args):
     try:
+        generate_vectors()
         generate()
     except Exception as ex:
         print(ex)
