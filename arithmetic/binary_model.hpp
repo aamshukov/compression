@@ -17,6 +17,9 @@ class binary_model : public model<ElementType, IntegerType>
 
         using abc_type = model<ElementType, IntegerType>::abc_type;
 
+        using index_type = std::size_t;
+        using size_type = std::size_t;
+
         using probability_type = std::vector<integer_type>;
 
     private:
@@ -29,39 +32,42 @@ class binary_model : public model<ElementType, IntegerType>
 
         abc_type            my_abc;
 
+        size_type           my_len;
+        size_type           my_1count;
+
     private:
-        void                calculate_cd(const probability_type& p);
+        void                update_model(const probability_type& p);
 
     public:
-                            binary_model(const probability_type& p, const abc_type& abc); // probability
+                            binary_model(const probability_type& p, // probability
+                                         const abc_type& abc,
+                                         size_type input_length,
+                                         size_type ones_count);
 
         integer_type        c_by_symbol(const element_type& symbol) override;
         integer_type        d_by_symbol(const element_type& symbol) override;
 
-        integer_type        c_by_index(std::size_t index) override;
-        integer_type        d_by_index(std::size_t index) override;
+        integer_type        c_by_index(index_type index) override;
+        integer_type        d_by_index(index_type index) override;
 
         integer_type        r() const override;
 
         abc_type            abc() const override;
 
-        element_type        symbol_by_index(std::size_t index) override;
+        element_type        symbol_by_index(index_type index) override;
 
         void                update(const element_type& symbol) override;
         void                reset() override;
 };
 
 template <typename ElementType, typename IntegerType>
-inline binary_model<ElementType, IntegerType>::binary_model(const probability_type& p, const abc_type& abc)
-    : my_p(p), my_r(0), my_abc(abc)
+inline binary_model<ElementType, IntegerType>::binary_model(const probability_type& p,
+                                                            const abc_type& abc,
+                                                            size_type input_length,
+                                                            size_type ones_count)
+    : my_r(0), my_abc(abc), my_len(input_length), my_1count(ones_count)
 {
-    calculate_cd(p);
-
-    // R
-    for(auto r : p)
-    {
-        my_r += r;
-    }
+    update_model(p);
 }
 
 template <typename ElementType, typename IntegerType>
@@ -79,13 +85,13 @@ inline typename binary_model<ElementType, IntegerType>::integer_type binary_mode
 }
 
 template <typename ElementType, typename IntegerType>
-inline typename binary_model<ElementType, IntegerType>::integer_type binary_model<ElementType, IntegerType>::c_by_index(std::size_t index)
+inline typename binary_model<ElementType, IntegerType>::integer_type binary_model<ElementType, IntegerType>::c_by_index(index_type index)
 {
     return my_c[index];
 }
 
 template <typename ElementType, typename IntegerType>
-inline typename binary_model<ElementType, IntegerType>::integer_type binary_model<ElementType, IntegerType>::d_by_index(std::size_t index)
+inline typename binary_model<ElementType, IntegerType>::integer_type binary_model<ElementType, IntegerType>::d_by_index(index_type index)
 {
     return my_d[index];
 }
@@ -103,7 +109,7 @@ typename binary_model<ElementType, IntegerType>::abc_type typename binary_model<
 }
 
 template <typename ElementType, typename IntegerType>
-inline typename binary_model<ElementType, IntegerType>::element_type binary_model<ElementType, IntegerType>::symbol_by_index(std::size_t index)
+inline typename binary_model<ElementType, IntegerType>::element_type binary_model<ElementType, IntegerType>::symbol_by_index(index_type index)
 {
     element_type result = (*abc()).symbol_by_index(index);
     return result;
@@ -112,28 +118,31 @@ inline typename binary_model<ElementType, IntegerType>::element_type binary_mode
 template <typename ElementType, typename IntegerType>
 inline void binary_model<ElementType, IntegerType>::update(const element_type& symbol)
 {
-    std::vector<integer_type> probability;
+    auto p1 = static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * 32768);
 
-    if(symbol == '0')
+    if(p1 >= 32768)
     {
-        probability = { 49151, 16384 };
-    }
-    else if(symbol == '1')
-    {
-        probability = { 16384, 49151 };
+        return; //??
     }
 
-    //calculate_cd(probability);
+    if(symbol == '1')
+    {
+        my_1count--;
+    }
+
+    my_len--;
+
+    update_model({ 32768 - p1, p1 });
 }
 
 template <typename ElementType, typename IntegerType>
 inline void binary_model<ElementType, IntegerType>::reset()
 {
-    calculate_cd(my_p);
+    update_model(my_p);
 }
 
 template <typename ElementType, typename IntegerType>
-inline void binary_model<ElementType, IntegerType>::calculate_cd(const probability_type& p)
+inline void binary_model<ElementType, IntegerType>::update_model(const probability_type& p)
 {
     // c(0) = 0, c(j) = r(0) + ... + r(j-1) for j = 1, ..., n
     my_c.resize(p.size());
@@ -157,6 +166,17 @@ inline void binary_model<ElementType, IntegerType>::calculate_cd(const probabili
     {
         my_d[j] = my_c[j] + p[j];
     }
+
+    // R
+    my_r = 0;
+
+    for(auto r : p)
+    {
+        my_r += r;
+    }
+
+    // P
+    my_p = p; //??
 }
 
 END_NAMESPACE

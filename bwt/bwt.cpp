@@ -17,7 +17,7 @@ int main()
     };
 
     //std::string str("mmiissiissiippii");
-    std::string str("0238175469234180579602381754692341805796");
+    std::string str("0000000000000010001000000000000000000000010000001000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000001000000000000000000101000000000000000000010000000000000000000000100000100100000000000001000000001001");
     //std::string str("23424132214321233132212413414343");
     //std::string str("23424132214321233132212413414343");
     //std::string str("abracadabra");
@@ -44,5 +44,5 @@ int main()
     bwt_type::decode(encoded_data, decoded_data);
     bwt_type::print(decoded_data);
 
-    std::wcout << (data == decoded_data) << std::endl;
+    std::wcout << ((data == decoded_data) ? L"ok" : L"error") << std::endl << std::endl;
 }

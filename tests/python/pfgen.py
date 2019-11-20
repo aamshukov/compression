@@ -17,16 +17,21 @@ def generate_vectors():
     from random import seed
     from random import randint
     n = 256
-    with open(r'd:\tmp\pf.slices.gen.txt', 'w') as stream:
-        for k in range(16):
-            l = n - 16 * k
+    r = 16
+    with open(r'd:\tmp\pf.slices.gen.{}.txt'.format(n), 'w') as stream:
+        for k in range(r):
+            l = n - r * k
             z = [0] * l
             p = []
-            for i in range(16):
+            ones = 0
+            while True:
                 c = randint(0, l - 1)
                 if c not in p:
                     p.append(c)
                     z[c] = 1
+                    ones += 1
+                if ones == r:
+                    break
             s = ''.join(str(x) for x in z) + '\n'
             print(s)
             stream.write(s)
