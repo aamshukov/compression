@@ -6,6 +6,30 @@
 
 #pragma once
 
+#ifdef _WIN32
+#   include <stdint.h>
+#   include <fcntl.h>
+#   include <sys/types.h>
+#   include <sys/stat.h>
+#   include <io.h>
+#   include <stdlib.h>
+#   include <stdio.h>
+#   include <math.h>
+#   include <tchar.h>
+#   include <time.h>
+#   include <iostream>
+#   include <fstream>
+#   include <sstream>
+#   include <assert.h>
+#   define WIN32_LEAN_AND_MEAN
+#   include <windows.h>
+#   include <ole2.h>
+#   include <limits.h>
+#   include <excpt.h>
+#   include <stdint.h>
+#else
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <tchar.h>
@@ -62,8 +86,10 @@
 
 #include <filesystem>
 
-#include <windows.h>
 #include <strsafe.h>
+
+#include <experimental/coroutine>
+#include <experimental/generator>
 
 #undef min
 #undef max

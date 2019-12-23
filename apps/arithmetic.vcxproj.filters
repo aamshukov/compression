@@ -5,6 +5,9 @@
     <ClCompile Include="..\core\pch.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libs\precision\precisioncore.cpp">
+      <Filter>algorithms\precision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="core">
@@ -15,6 +18,15 @@
     </Filter>
     <Filter Include="streams">
       <UniqueIdentifier>{a2ed5f5c-e1c9-41c8-b548-60b183d930a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithms">
+      <UniqueIdentifier>{b8305e58-aeef-4205-a890-156a83ebb657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithms\permutation">
+      <UniqueIdentifier>{4cbc6c6a-5302-461b-9dac-74fd544d5be2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithms\precision">
+      <UniqueIdentifier>{2efb95c6-9f13-4362-9606-327e88b2abc4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="..\arithmetic\binary_abc.hpp">
       <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\algorithms\permutation\permutation.hpp">
+      <Filter>algorithms\permutation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\algorithms\permutation\permutation_entropy.hpp">
+      <Filter>algorithms\permutation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -240,7 +240,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
 #ifdef _DEBUG
         if(symbol == 1 || symbol == L'1')
 #else
-        if(symbol == 1)
+        if(symbol == 1 || symbol == L'1')
+        //if(symbol == 1)
 #endif
         {
             z = z + (1 << (my_precision - i));
@@ -336,7 +337,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
 #ifdef _DEBUG
             if((*input_stream).read(symbol) && (symbol == 1 || symbol == '1'))
 #else
-            if((*input_stream).read(symbol) && symbol == 1)
+            if((*input_stream).read(symbol) && (symbol == 1 || symbol == '1'))
+            //if((*input_stream).read(symbol) && symbol == 1)
 #endif
             {
                 z = z + 1;
@@ -352,7 +354,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
 #ifdef _DEBUG
             if((*input_stream).read(symbol) && (symbol == 1 || symbol == '1'))
 #else
-            if((*input_stream).read(symbol) && symbol == 1)
+            if((*input_stream).read(symbol) && (symbol == 1 || symbol == '1'))
+            //if((*input_stream).read(symbol) && symbol == 1)
 #endif
             {
                 z = z + 1;

@@ -1,5 +1,6 @@
 import os
 import sys
+import itertools
 
 from random import randint
 
@@ -44,6 +45,19 @@ def main(args):
     except Exception as ex:
         print(ex)
     return 1
+
+
+def prime_factors(n):
+    for i in itertools.chain([2], itertools.count(3, 2)):
+        if n <= 1:
+            break
+        while n % i == 0:
+            n //= i
+            yield i
+
+
+for n in prime_factors(10):
+    print(n)
 
 
 if __name__ == '__main__':

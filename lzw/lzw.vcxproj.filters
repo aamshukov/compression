@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="lzw.cpp" />
+    <ClCompile Include="..\core\pch.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="codec.hpp" />
+    <ClInclude Include="..\core\noncopyable.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\core\pch.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="model.hpp" />
+    <ClInclude Include="binary_model.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{d7c2d13b-9bab-479e-98d0-f05826be8cad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

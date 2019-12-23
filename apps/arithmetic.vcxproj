@@ -115,10 +115,12 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..;$(SolutionDir)..\libs\ICU\icu4c-60_2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..;$(SolutionDir)..\libs\ICU\icu4c-60_2\include;D:\Projects\libs\precision</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile>core/pch.hpp</PrecompiledHeaderFile>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,10 +173,12 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..;$(SolutionDir)..\libs\ICU\icu4c-60_2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..;$(SolutionDir)..\libs\ICU\icu4c-60_2\include;D:\Projects\libs\precision</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeaderFile>core/pch.hpp</PrecompiledHeaderFile>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,6 +195,10 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\libs\precision\precisioncore.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\core\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">core/pch.hpp</PrecompiledHeaderFile>
@@ -213,6 +221,8 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\algorithms\permutation\permutation.hpp" />
+    <ClInclude Include="..\algorithms\permutation\permutation_entropy.hpp" />
     <ClInclude Include="..\arithmetic\abc.hpp" />
     <ClInclude Include="..\arithmetic\binary_abc.hpp" />
     <ClInclude Include="..\arithmetic\binary_model.hpp" />
