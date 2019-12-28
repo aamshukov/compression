@@ -112,7 +112,7 @@
 
 BEGIN_NAMESPACE(compression)
 
-using bit = uint8_t;
+using bit = int;
 using byte = uint8_t;
 
 using codepoint = uint32_t;

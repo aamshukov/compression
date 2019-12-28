@@ -8,41 +8,61 @@
 
 BEGIN_NAMESPACE(compression::lzw)
 
-template <typename ElementType, typename IntegerType>
-class binary_model : public model<ElementType, IntegerType>
+template <typename ElementType, typename IntegerType, typename KeyType, typename ValueType>
+class binary_model : public model<ElementType, IntegerType, KeyType, ValueType>
 {
     public:
-        using integer_type = model<ElementType, IntegerType>::integer_type;
-        using element_type = model<ElementType, IntegerType>::element_type;
+        using integer_type = model<ElementType, IntegerType, KeyType, ValueType>::integer_type;
+        using element_type = model<ElementType, IntegerType, KeyType, ValueType>::element_type;
 
-        using index_type = std::size_t;
-        using size_type = std::size_t;
-
-        using dictionary_type = std::unordered_map<string_type, string_type>;
+        using codes_type = model<ElementType, IntegerType, KeyType, ValueType>::codes_type;
+        using strings_type = model<ElementType, IntegerType, KeyType, ValueType>::strings_type;
 
     private:
-        dictionary_type     my_dictionary;
+        codes_type              my_codes;
+        strings_type            my_strings;
 
     public:
-                            binary_model();
+                                binary_model();
 
-        void                update(const element_type& symbol) override;
-        void                reset() override;
+        const codes_type&       codes() const override;
+        codes_type&             codes() override;
+
+        const strings_type&     strings() const override;
+        strings_type&           strings() override;
 };
 
-template <typename ElementType, typename IntegerType>
-inline binary_model<ElementType, IntegerType>::binary_model()
+template <typename ElementType, typename IntegerType, typename KeyType, typename ValueType>
+inline binary_model<ElementType, IntegerType, KeyType, ValueType>::binary_model()
 {
 }
 
-template <typename ElementType, typename IntegerType>
-inline void binary_model<ElementType, IntegerType>::update(const element_type& symbol)
+template <typename ElementType, typename IntegerType, typename KeyType, typename ValueType>
+inline const typename binary_model<ElementType, IntegerType, KeyType, ValueType>::codes_type&
+    binary_model<ElementType, IntegerType, KeyType, ValueType>::codes() const
 {
+    return my_codes;
 }
 
-template <typename ElementType, typename IntegerType>
-inline void binary_model<ElementType, IntegerType>::reset()
+template <typename ElementType, typename IntegerType, typename KeyType, typename ValueType>
+inline typename binary_model<ElementType, IntegerType, KeyType, ValueType>::codes_type&
+    binary_model<ElementType, IntegerType, KeyType, ValueType>::codes()
 {
+    return my_codes;
+}
+
+template <typename ElementType, typename IntegerType, typename KeyType, typename ValueType>
+inline const typename binary_model<ElementType, IntegerType, KeyType, ValueType>::strings_type&
+    binary_model<ElementType, IntegerType, KeyType, ValueType>::strings() const
+{
+    return my_strings;
+}
+
+template <typename ElementType, typename IntegerType, typename KeyType, typename ValueType>
+inline typename binary_model<ElementType, IntegerType, KeyType, ValueType>::strings_type&
+    binary_model<ElementType, IntegerType, KeyType, ValueType>::strings()
+{
+    return my_strings;
 }
 
 END_NAMESPACE

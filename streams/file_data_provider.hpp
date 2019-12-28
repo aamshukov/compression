@@ -33,6 +33,8 @@ class file_data_provider : public data_provider<byte>
         bool        put(const byte& value) override;
 
         void        flush() override;
+
+        void        rewind();
 };
 
 inline file_data_provider::file_data_provider(const string_type& file_name, const wchar_t* mode)
@@ -110,6 +112,14 @@ inline void file_data_provider::flush()
     if(my_status == 0 && my_file != nullptr)
     {
         fflush(my_file);
+    }
+}
+
+inline void file_data_provider::rewind()
+{
+    if(my_status == 0 && my_file != nullptr)
+    {
+        fseek(my_file, 0L, SEEK_SET);
     }
 }
 
