@@ -60,6 +60,11 @@ for n in prime_factors(10):
     print(n)
 
 
+def generate_lzw_dictionary():
+    for k in range(16):
+        print("{0:b}".format(k))
+
+
 if __name__ == '__main__':
     main(sys.argv[1:])
     # buggy microft cannot fix the crap --- sys.exit(main(sys.argv[1:]))

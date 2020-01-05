@@ -108,5 +108,11 @@
     <ClInclude Include="..\algorithms\permutation\permutation_entropy.hpp">
       <Filter>algorithms\permutation</Filter>
     </ClInclude>
+    <ClInclude Include="..\arithmetic\decimal_abc.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\decimal_model.hpp">
+      <Filter>arithmetic</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

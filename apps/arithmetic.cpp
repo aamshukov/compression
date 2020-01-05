@@ -34,6 +34,9 @@
 #include <arithmetic/binary_abc.hpp>
 #include <arithmetic/binary_model.hpp>
 
+#include <arithmetic/decimal_abc.hpp>
+#include <arithmetic/decimal_model.hpp>
+
 #include <algorithms/permutation/permutation.hpp>
 #include <iprecision.h>
 
@@ -41,13 +44,18 @@ USINGNAMESPACE(compression)
 USINGNAMESPACE(algorithms)
 
 void test_binary_model_pf();
-void test_binary_model();
+void test_binary_model(const char_type* data = nullptr);
+void test_decimal_model(const char_type* data = nullptr);
 void test_simple_model();
+void test_rle(const char_type* data = nullptr);
 void test_permutation256();
 void test_permutation256_n();
 
 int main()
 {
+    test_rle();
+    //test_binary_model();
+    //test_decimal_model();
     test_permutation256_n();
     //test_binary_model();
     //test_binary_model_pf();
@@ -57,6 +65,19 @@ int main()
 #define str2wstr(__str)                                                 \
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;   \
     std::wstring wide = converter.from_bytes(__str);
+
+#define replace(__xx__)                                                 \
+{                                                                       \
+    std::size_t start = 0;                                              \
+    string_type substr(__xx__);                                         \
+    string_type stub(L"9");                                             \
+    while((start = str.find(substr, start)) != std::string::npos)       \
+    {                                                                   \
+        str.replace(start, substr.length(), stub);                      \
+        start += stub.length();                                         \
+    }                                                                   \
+}
+
 
 template <typename T, std::size_t N> constexpr std::size_t array_size(T const (&)[N])
 {
@@ -122,8 +143,8 @@ void test_binary_model_pf()
 
         auto ii2 = (*output_stream).data(); // last 0s are not significant!!!
         if(ii2[ii2.size() - 1] == L'0')
-            ii2 = ii2.substr(0, ii2.size() - 1);
-            ii2 = ii2.substr(0, ii2.rfind(L'1') + 1);
+           ii2 = ii2.substr(0, ii2.size() - 1);
+           ii2 = ii2.substr(0, ii2.rfind(L'1') + 1);
 
         total += ii2.size();
 
@@ -141,13 +162,19 @@ void test_binary_model_pf()
     std::wcout << total << std::endl << std::endl;
 }
 
-void test_binary_model()
+void test_binary_model(const char_type* data)
 {
-    using input_stream_type = input_string_stream<char_type>;
-    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>
-    (L"0000101010111001101111110110001010111101100111010111001001101101001010011001011111010011101111000101011001100110111110111010100010011100001011110111010111010100111001001011011000101100100000110100110011110110111110011110010000010010011111011111010111111000"));
+    if(data == nullptr)
+    {
+        data = L"0000101000010001011111100001010010010000110000010010100000000010100010000000110010110000001000001000100000001000001000000000100100011101001001000010001011100000010000001001000000010010101100001010100110101010101010100000000110000010100000000100001000001001101010000110100110101000101001000100100100100001000000000000010000000101001001010100000000010000011000011000000010000000100000001001001000000000001000000100000010011001000001110111001100101001000010100101010100000000000001000010001100100000001100";
+    }
 
-    std::wcout << (*input_stream).data() << L':' << (*input_stream).data().size() << std::endl;
+    string_type str(data);
+
+    using input_stream_type = input_string_stream<char_type>;
+    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(str.c_str()));
+
+    std::wcout << (*input_stream).data() << L':' << (*input_stream).data().size() << std::endl << std::endl;
 
     using output_stream_type = output_string_stream<char_type>;
     std::shared_ptr<output_stream_type> output_stream(std::make_shared<output_stream_type>());
@@ -156,10 +183,20 @@ void test_binary_model()
 
     using model_type = arithmetic::binary_model<char_type, integer_type>;
 
-    std::vector<integer_type> probability = { 14336, 18432 };
+    auto x0count = 0;
+    auto x1count = 0;
 
-    auto abc(std::make_shared<arithmetic::simple_abc<>>());
-    std::shared_ptr<model_type> model(std::make_shared<model_type>(probability, abc, (*input_stream).data().size(), 128));
+    std::for_each(str.begin(), str.end(), [&x0count](auto el){ if(el == L'0') x0count++; });
+    std::for_each(str.begin(), str.end(), [&x1count](auto el){ if(el == L'1') x1count++; });
+
+    auto p0 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x0count) / str.size()) * 32768));
+    auto p1 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x1count) / str.size()) * 32768));
+
+    p0 += 32768 - (p0 + p1);
+    std::vector<integer_type> probability = { p0, p1 };
+
+    auto abc(std::make_shared<arithmetic::binary_abc<>>());
+    std::shared_ptr<model_type> model(std::make_shared<model_type>(probability, abc, (*input_stream).data().size(), 460));
 
     arithmetic::codec<char_type, integer_type, input_stream_type, output_stream_type> ac;
 
@@ -167,7 +204,7 @@ void test_binary_model()
     std::size_t encoded_size;
 
     bool rc1 = ac.encode(model, input_stream, output_stream, original_size, encoded_size);
-    std::wcout << (*output_stream).data() << L':' << (*output_stream).data().size() << std::endl;
+    std::wcout << (*output_stream).data() << L':' << (*output_stream).data().size() << std::endl << std::endl;
 
     std::shared_ptr<input_stream_type> input_stream2(std::make_shared<input_stream_type>((*output_stream).data()));
     std::shared_ptr<output_stream_type> output_stream2(std::make_shared<output_stream_type>());
@@ -176,6 +213,114 @@ void test_binary_model()
     std::wcout << (*output_stream2).data() << std::endl;
 
     std::wcout << (rc2 && ((*input_stream).data() == (*output_stream2).data()) ? L"ok" : L"error") << std::endl << std::endl;
+}
+
+void test_decimal_model(const char_type* data)
+{
+    if(data == nullptr)
+    {
+        data = L"4214030020100100000000000010000200003000000210100101010111005100012000240020000100001100020030010000000000300000000000000002010002200000000210011000100000012014201010010200000220000000000002020000000001000001000000010100032000100200000000010000060003020010000100101000002000000000000040010020020000000020110000000120000000010020000000001000011000000000000001100002000000110110003300000000200010100000000200310012001000200000000300000000000000000010110100000010000000000058600240100000100014001000000000";
+    }
+
+    string_type str(data);
+
+    replace(L"'10'")
+    replace(L"'11'")
+    replace(L"'12'")
+    replace(L"'13'")
+    replace(L"'14'")
+    replace(L"'15'")
+    replace(L"'16'")
+    replace(L"'17'")
+    replace(L"'18'")
+    replace(L"'19'")
+
+    using input_stream_type = input_string_stream<char_type>;
+    std::shared_ptr<input_stream_type> input_stream(std::make_shared<input_stream_type>(str.c_str()));
+
+    std::wcout << (*input_stream).data() << L':' << (*input_stream).data().size() << std::endl << std::endl;
+
+    using output_stream_type = output_string_stream<char_type>;
+    std::shared_ptr<output_stream_type> output_stream(std::make_shared<output_stream_type>());
+
+    using integer_type = uint32_t;
+
+    using model_type = arithmetic::decimal_model<char_type, integer_type>;
+
+    auto x0count = 0;
+    auto x1count = 0;
+    auto x2count = 0;
+    auto x3count = 0;
+    auto x4count = 0;
+    auto x5count = 0;
+    auto x6count = 0;
+    auto x7count = 0;
+    auto x8count = 0;
+    auto x9count = 0;
+
+    std::for_each(str.begin(), str.end(), [&x0count](auto el){ if(el == L'0') x0count++; });
+    std::for_each(str.begin(), str.end(), [&x1count](auto el){ if(el == L'1') x1count++; });
+    std::for_each(str.begin(), str.end(), [&x2count](auto el){ if(el == L'2') x2count++; });
+    std::for_each(str.begin(), str.end(), [&x3count](auto el){ if(el == L'3') x3count++; });
+    std::for_each(str.begin(), str.end(), [&x4count](auto el){ if(el == L'4') x4count++; });
+    std::for_each(str.begin(), str.end(), [&x5count](auto el){ if(el == L'5') x5count++; });
+    std::for_each(str.begin(), str.end(), [&x6count](auto el){ if(el == L'6') x6count++; });
+    std::for_each(str.begin(), str.end(), [&x7count](auto el){ if(el == L'7') x7count++; });
+    std::for_each(str.begin(), str.end(), [&x8count](auto el){ if(el == L'8') x8count++; });
+    std::for_each(str.begin(), str.end(), [&x9count](auto el){ if(el == L'9') x9count++; });
+    
+    auto p0 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x0count) / str.size()) * 32768));
+    auto p1 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x1count) / str.size()) * 32768));
+    auto p2 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x2count) / str.size()) * 32768));
+    auto p3 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x3count) / str.size()) * 32768));
+    auto p4 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x4count) / str.size()) * 32768));
+    auto p5 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x5count) / str.size()) * 32768));
+    auto p6 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x6count) / str.size()) * 32768));
+    auto p7 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x7count) / str.size()) * 32768));
+    auto p8 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x8count) / str.size()) * 32768));
+    auto p9 = std::max((integer_type)1, static_cast<integer_type>((static_cast<double>(x9count) / str.size()) * 32768));
+
+    p0 += 32768 - (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9);
+    //std::vector<integer_type> probability = { 17336, 7429, 4699, 1651, 571, 571, 317, 127, 63, 4 };
+    std::vector<integer_type> probability = { p0, p1, p2, p3, p4, p5, p6, p7, p8, p9 };
+
+    std::size_t original_size;
+    std::size_t encoded_size;
+
+    {
+        auto abc(std::make_shared<arithmetic::decimal_abc<>>());
+        std::shared_ptr<model_type> model(std::make_shared<model_type>(probability,
+                                                                       abc,
+                                                                       (*input_stream).data().size(),
+                                                                       x0count, x1count, x2count, x3count, x4count, x5count, x6count, x7count, x8count, x9count));
+
+        arithmetic::codec<char_type, integer_type, input_stream_type, output_stream_type> ac;
+
+        bool rc1 = ac.encode(model, input_stream, output_stream, original_size, encoded_size);
+        std::wcout << (*output_stream).data() << L':' << (*output_stream).data().size() << std::endl << std::endl;
+    }
+    {
+        auto abc(std::make_shared<arithmetic::decimal_abc<>>());
+        std::shared_ptr<model_type> model(std::make_shared<model_type>(probability,
+                                                                       abc,
+                                                                       (*input_stream).data().size(),
+                                                                       x0count, x1count, x2count, x3count, x4count, x5count, x6count, x7count, x8count, x9count));
+
+        arithmetic::codec<char_type, integer_type, input_stream_type, output_stream_type> ac;
+
+        std::shared_ptr<input_stream_type> input_stream2(std::make_shared<input_stream_type>((*output_stream).data()));
+        std::shared_ptr<output_stream_type> output_stream2(std::make_shared<output_stream_type>());
+
+        bool rc2 = ac.decode(model, input_stream2, output_stream2, original_size);
+        std::wcout << (*output_stream2).data() << std::endl;
+
+        std::wcout << (rc2 && ((*input_stream).data() == (*output_stream2).data()) ? L"ok" : L"error") << std::endl << std::endl;
+
+        if(!(rc2 && ((*input_stream).data() == (*output_stream2).data())))
+        {
+            throw "zopa";
+        }
+    }
 }
 
 void test_simple_model()
@@ -215,6 +360,56 @@ void test_simple_model()
     std::wcout << (rc2 && ((*input_stream).data() == (*output_stream2).data()) ? L"ok" : L"error") << std::endl << std::endl;
 }
 
+void test_rle(const char_type* data)
+{
+    if(data == nullptr)
+    {
+        data = L"0000101000010001011111100001010010010000110000010010100000000010100010000000110010110000001000001000100000001000001000000000100100011101001001000010001011100000010000001001000000010010101100001010100110101010101010100000000110000010100000000100001000001001101010000110100110101000101001000100100100100001000000000000010000000101001001010100000000010000011000011000000010000000100000001001001000000000001000000100000010011001000001110111001100101001000010100101010100000000000001000010001100100000001100";
+    }
+
+    string_type str(data);
+
+    using permutation_type = permutation<int, int_precision>;
+
+    permutation_type::elements_type rle;
+
+    int kn = str.size() - 1;
+    for(;;)
+    {
+        auto x0count = 0;
+        auto x1count = 0;
+        auto x2count = 0;
+        auto x3count = 0;
+        auto x4count = 0;
+        auto x5count = 0;
+        auto x6count = 0;
+        auto x7count = 0;
+        auto x8count = 0;
+        auto x9count = 0;
+
+        while(kn > 0 && str[kn] == L'0')
+            zeroes++, kn--;
+        if(zeroes > 0)
+            rle.emplace(rle.begin(), zeroes - 1);
+
+        while(kn > 0 && str[kn] == L'1')
+            ones++, kn--;
+        if(ones > 0)
+            rle.emplace(rle.begin(), ones - 1);
+
+        if(kn == 0)
+            break;
+    }
+
+    string_type rle_str;
+    std::for_each(rle.begin(), rle.end(), [&rle_str](auto el)
+    {
+        rle_str += std::to_wstring(el);
+    });
+
+    std::wcout << L"RLE(" << rle_str.size() << L"):" << rle_str << std::endl;
+}
+
 void test_permutation256_n()
 {
     std::srand((unsigned int)std::time(nullptr));
@@ -250,7 +445,10 @@ void fibonacci(const T& n, std::pair<std::size_t, T>& result)
     result.second = x;
 }
 
-#define PRINT_STATS _DEBUG
+//?? starting from 8th perm select huffman if it is less then non-huffman
+//?? poprobovat' huff less than 9 codes
+
+#define PRINT_STATS 1//??_DEBUG
 
 #define BUILD_32    0
 #define BUILD_64    0
@@ -344,8 +542,10 @@ void test_permutation256()
     //}
 
     //string_type huffman_codes[] = { L"1", L"01", L"000", L"0011", L"00100", L"001011", L"0010101", L"00101000", L"00101001" };
-    //string_type huffman_codes[] = { L"0", L"10", L"1110", L"1111", L"11000", L"11010", L"110010", L"110110", L"110111", L"11001100", L"11001101", L"11001110", L"11001111" };
-    string_type huffman_codes[] = { L"0", L"11", L"1000", L"1010", L"1011", L"10010", L"10011" };
+    string_type huffman_codes[] = { L"0", L"10", L"1110", L"1111", L"11000", L"11010", L"110010", L"110110", L"110111", L"11001100", L"11001101", L"11001110", L"11001111" };
+    //string_type huffman_codes[] = { L"0", L"10", L"1110", L"1111", L"11000", L"11010", L"110010", L"110110", L"110111" };
+    //string_type huffman_codes[] = { L"0", L"11", L"1000", L"1010", L"1011", L"10010", L"10011" };
+    //string_type huffman_codes[] = { L"1", L"01", L"001", L"0001", L"0000" };
 
 
 #if PRINT_STATS == 1
@@ -480,12 +680,12 @@ void test_permutation256()
             while(kn > 0 && slice[kn] == 0)
                 zeroes++, kn--;
             if(zeroes > 0)
-                rle.emplace(rle.begin(), zeroes);
+                rle.emplace(rle.begin(), zeroes - 1); //?? -1
 
             while(kn > 0 && slice[kn] == 1)
                 ones++, kn--;
             if(ones > 0)
-                rle.emplace(rle.begin(), ones);
+                rle.emplace(rle.begin(), ones - 1); //?? -1
 
             if(kn == 0)
                 break;
@@ -494,10 +694,10 @@ void test_permutation256()
         string_type rle_str;
         std::for_each(rle.begin(), rle.end(), [&rle_str, &huffman_codes](auto el)
         {
-            if(el > array_size(huffman_codes))
+            if(el >= array_size(huffman_codes))
                 rle_str += L"'";
             rle_str += std::to_wstring(el);
-            if(el > array_size(huffman_codes))
+            if(el >= array_size(huffman_codes))
                 rle_str += L"'";
         });
         std::wcout << L"RLE(" << rle_str.size() << L"):" << rle_str << std::endl;
@@ -585,6 +785,11 @@ void test_permutation256()
         std::shared_ptr<model_type> model1(std::make_shared<model_type>(probability, abc, (*input_stream).data().size(), r));
         bool rc2 = ac.decode(model1, input_stream2, output_stream2, original_size);
 
+        if(!rc2)
+        {
+            throw "zopa";
+        }
+
         // collect RLE, backward because the last element is always 1
         permutation_type::elements_type rle;
 
@@ -600,12 +805,12 @@ void test_permutation256()
             while(k > 0 && ii2[k] == '0')
                 zeroes++, k--;
             if(zeroes > 0)
-                rle.emplace(rle.begin(), zeroes);
+                rle.emplace(rle.begin(), zeroes - 1); //?? -1 because we know RLE is never == 0
 
             while(k > 0 && ii2[k] == '1')
                 ones++, k--;
             if(ones > 0)
-                rle.emplace(rle.begin(), ones);
+                rle.emplace(rle.begin(), ones - 1); //?? -1 because we know RLE is never == 0
 
             if(k == 0)
                 break;
@@ -614,16 +819,16 @@ void test_permutation256()
         string_type huf_str;
         std::for_each(rle.begin(), rle.end(), [&rle_str, &huf_str, &huffman_codes](auto el)
         {
-            if(el > array_size(huffman_codes))
+            if(el >= array_size(huffman_codes))
                 rle_str += L"'";
             rle_str += std::to_wstring(el);
-            if(el > array_size(huffman_codes))
+            if(el >= array_size(huffman_codes))
                 rle_str += L"'";
 
-            if(el > array_size(huffman_codes))
+            if(el >= array_size(huffman_codes))
                 huf_str += L'.';
             else
-                huf_str += huffman_codes[el - 1];
+                huf_str += huffman_codes[el]; //?? - 1]; because we know RLE is never == 0
         });
 #if PRINT_STATS == 1
         std::wcout << L"RLE(" << rle_str.size() << L"):" << rle_str << std::endl;
@@ -651,13 +856,16 @@ void test_permutation256()
     string_type huf_str;
     std::for_each(rles.begin(), rles.end(), [&huf_str, &huffman_codes](auto el)
     {
-        if(el >= '1' && (el - '0') <= array_size(huffman_codes))
-            huf_str += huffman_codes[(el - '0') - 1];
+        if(el >= '0' && (el - '0') < array_size(huffman_codes))
+            huf_str += huffman_codes[(el - '0')];//?? - 1];
         else
             huf_str += L'.';
     });
-    std::wcout << L"HUF(" << huf_str.size() << L"):" << huf_str << std::endl;
-    std::wcout << total << std::endl << std::endl;
+    std::wcout << L"HUF(" << huf_str.size() << L"):" << huf_str << std::endl << std::endl << std::endl;
+
+    test_decimal_model(rles.c_str());
+
+    std::wcout << std::endl << total << std::endl << std::endl;
 
     // calculate permutations-waves?????
     for(int i = 0, n = commpressed_slices_sizes.size(); i < n; i++)

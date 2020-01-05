@@ -227,6 +227,8 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
     <ClInclude Include="..\arithmetic\binary_abc.hpp" />
     <ClInclude Include="..\arithmetic\binary_model.hpp" />
     <ClInclude Include="..\arithmetic\codec.hpp" />
+    <ClInclude Include="..\arithmetic\decimal_abc.hpp" />
+    <ClInclude Include="..\arithmetic\decimal_model.hpp" />
     <ClInclude Include="..\arithmetic\model.hpp" />
     <ClInclude Include="..\arithmetic\simple_abc.hpp" />
     <ClInclude Include="..\arithmetic\simple_model.hpp" />
