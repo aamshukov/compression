@@ -120,7 +120,7 @@ inline void binary_model<ElementType, IntegerType>::update(const element_type& s
 {
     auto p1 = static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * 32768);
 
-    //if(p1 >= 32768)
+    if(p1 >= 32768)
     {
         return; //??
     }

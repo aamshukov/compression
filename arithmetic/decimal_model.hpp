@@ -50,18 +50,18 @@ class decimal_model : public model<ElementType, IntegerType>
 
     public:
                             decimal_model(const probability_type& p, // probability
-                                         const abc_type& abc,
-                                         size_type input_length,
-                                         size_type x0count,
-                                         size_type x1count,
-                                         size_type x2count,
-                                         size_type x3count,
-                                         size_type x4count,
-                                         size_type x5count,
-                                         size_type x6count,
-                                         size_type x7count,
-                                         size_type x8count,
-                                         size_type x9count);
+                                          const abc_type& abc,
+                                          size_type input_length,
+                                          size_type x0count,
+                                          size_type x1count,
+                                          size_type x2count,
+                                          size_type x3count,
+                                          size_type x4count,
+                                          size_type x5count,
+                                          size_type x6count,
+                                          size_type x7count,
+                                          size_type x8count,
+                                          size_type x9count);
 
         integer_type        c_by_symbol(const element_type& symbol) override;
         integer_type        d_by_symbol(const element_type& symbol) override;

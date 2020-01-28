@@ -28,6 +28,9 @@
     <Filter Include="algorithms\precision">
       <UniqueIdentifier>{2efb95c6-9f13-4362-9606-327e88b2abc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="algorithms\codes">
+      <UniqueIdentifier>{5b4c58b2-070a-44b7-bd35-dcd748bbd8ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\core\pch.hpp">
@@ -113,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="..\arithmetic\decimal_model.hpp">
       <Filter>arithmetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\algorithms\codes\codes.hpp">
+      <Filter>algorithms\codes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

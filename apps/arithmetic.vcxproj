@@ -221,6 +221,7 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\algorithms\codes\codes.hpp" />
     <ClInclude Include="..\algorithms\permutation\permutation.hpp" />
     <ClInclude Include="..\algorithms\permutation\permutation_entropy.hpp" />
     <ClInclude Include="..\arithmetic\abc.hpp" />
