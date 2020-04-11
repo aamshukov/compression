@@ -7,6 +7,7 @@
 #pragma once
 
 #ifdef _WIN32
+#   define NOMINMAX
 #   include <stdint.h>
 #   include <fcntl.h>
 #   include <sys/types.h>
@@ -91,8 +92,8 @@
 #include <experimental/coroutine>
 #include <experimental/generator>
 
-#undef min
-#undef max
+//#undef min
+//#undef max
 
 #define COMPANY uilab
 

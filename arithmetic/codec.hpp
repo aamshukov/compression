@@ -250,6 +250,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
         i++;
     }
 
+//int onesss = 0; //??
+
     // abc
     std::size_t abc_size = (*(*model).abc()).data().size();
 
@@ -299,6 +301,14 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
                 (*output_stream).write(symbol);
 
                 decoded_size++;
+
+                //if(symbol == '1') //??
+                //{
+                //    onesss++;
+
+                //    if(onesss == 4)
+                //        goto _exit;
+                //}
 
                 if(decoded_size == original_size)
                 {

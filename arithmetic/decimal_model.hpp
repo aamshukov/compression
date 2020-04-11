@@ -175,42 +175,52 @@ inline void decimal_model<ElementType, IntegerType>::update(const element_type& 
     if(symbol == '0')
     {
         my_0count--;
+        //my_0count = (int)my_0count < 0 ? 0 : my_0count;
     }
     else if(symbol == '1')
     {
         my_1count--;
+        //my_1count = (int)my_1count < 0 ? 0 : my_1count;
     }
     else if(symbol == '2')
     {
         my_2count--;
+        //my_2count = (int)my_2count < 0 ? 0 : my_2count;
     }
     else if(symbol == '3')
     {
         my_3count--;
+        //my_3count = (int)my_3count < 0 ? 0 : my_3count;
     }
     else if(symbol == '4')
     {
         my_4count--;
+        //my_4count = (int)my_4count < 0 ? 0 : my_4count;
     }
     else if(symbol == '5')
     {
         my_5count--;
+        //my_5count = (int)my_5count < 0 ? 0 : my_5count;
     }
     else if(symbol == '6')
     {
         my_6count--;
+        //my_6count = (int)my_6count < 0 ? 0 : my_6count;
     }
     else if(symbol == '7')
     {
         my_7count--;
+        //my_7count = (int)my_7count < 0 ? 0 : my_7count;
     }
     else if(symbol == '8')
     {
         my_8count--;
+        //my_8count = (int)my_8count < 0 ? 0 : my_8count;
     }
     else if(symbol == '9')
     {
         my_9count--;
+        //my_9count = (int)my_9count < 0 ? 0 : my_9count;
     }
 
     my_len--;
