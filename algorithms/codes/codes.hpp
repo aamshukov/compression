@@ -95,16 +95,16 @@ string_type codes<ElementType>::encode_interpolative_block(const typename codes<
     // Compression and Coding Algorithms, A. Moffat and A. Turpin p.54
     string_type result;
 
-    auto m = M.size(); // M, m
+    int m = (int)M.size(); // M, m
     
-    elements_type L(M.size());
+    elements_type L((int)M.size());
 
     L[0] = M[0];
 
-    for(auto i = 1; i < M.size(); i++)
+    for(int i = 1; i < (int)M.size(); i++)
         L[i] = L[i - 1] + M[i];
 
-    auto B = L[L.size() - 1];
+    auto B = L[(int)L.size() - 1];
 
     encode_interpolative_block(L, m, 1, B, result);
 

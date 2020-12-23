@@ -25,6 +25,10 @@ class binary_model : public model<ElementType, IntegerType>
     private:
         probability_type    my_p;
 
+        double    my_p1; //??
+        double    my_f; //??
+        //int       my_scale_factor;
+
         probability_type    my_c;
         probability_type    my_d;
 
@@ -33,6 +37,8 @@ class binary_model : public model<ElementType, IntegerType>
         abc_type            my_abc;
 
         size_type           my_len;
+
+        size_type           my_0count; //??
         size_type           my_1count;
 
     private:
@@ -65,8 +71,10 @@ inline binary_model<ElementType, IntegerType>::binary_model(const probability_ty
                                                             const abc_type& abc,
                                                             size_type input_length,
                                                             size_type ones_count)
-    : my_r(0), my_abc(abc), my_len(input_length), my_1count(ones_count)
-{
+    : my_r(0), my_abc(abc), my_len(input_length), my_0count(1), my_1count(ones_count)
+      //my_1count(1), my_f(1.0 - (1.0 / 32.0)), my_p1(0.5)
+{     //??
+    ;
     update_model(p);
 }
 
@@ -126,11 +134,28 @@ inline void binary_model<ElementType, IntegerType>::update(const element_type& s
         return; //??
     }
 
+    //if(symbol == '0')
+    //    my_0count++;
+    //else if(symbol == '1')
+    //    my_1count++;
+    //p1 = (integer_type)((double(my_1count) / double(my_0count + my_1count)) * 32768);
+
+    //if(symbol == '0')
+    //    my_p1 *= my_f;
+    //else if(symbol == '1')
+    //    my_p1 = my_p1 * my_f + (1.0 - my_f);
+    //p1 = (integer_type)(my_p1 * 32768);
+
+    //if(symbol == '0')
+    //    my_p1 -= my_p1 >> 5;
+    //else if(symbol == '1')
+    //    my_p1 += (my_scale_factor - my_p1) >> 5;
+    //p1 = (integer_type)(my_p1);//?? * 32768);
+
     if(symbol == '1')
     {
         my_1count--;
     }
-
     my_len--;
 
     //if(my_len == 1)

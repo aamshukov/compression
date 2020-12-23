@@ -27,7 +27,7 @@ class bwt : private noncopyable
         static bool encode(const elements_type& raw_data, elements_type& encoded_data);
         static bool decode(const elements_type& encoded_data, elements_type& decoded_data);
 
-        static void print(const elements_type& data);
+        static void print(const elements_type& data, bool spaced = true);
 };
 
 template <typename ElementType, typename Traits>
@@ -143,11 +143,11 @@ inline bool bwt<ElementType, Traits>::decode(const typename bwt<ElementType, Tra
 }
 
 template <typename ElementType, typename Traits>
-void bwt<ElementType, Traits>::print(const typename bwt<ElementType, Traits>::elements_type& data)
+void bwt<ElementType, Traits>::print(const typename bwt<ElementType, Traits>::elements_type& data, bool spaced)
 {
     for(auto element : data)
     {
-        std::wcout << char_type(element) << L' ';
+        std::wcout << char_type(element) << (spaced ? L" " : L"");
     }
 
     std::wcout << std::endl;

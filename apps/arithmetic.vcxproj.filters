@@ -5,7 +5,7 @@
     <ClCompile Include="..\core\pch.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libs\precision\precisioncore.cpp">
+    <ClCompile Include="..\libs\precision\precisioncore.cpp">
       <Filter>algorithms\precision</Filter>
     </ClCompile>
   </ItemGroup>
