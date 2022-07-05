@@ -86,7 +86,6 @@ inline bool file_data_provider::get(byte& value)
     if(my_status == 0 && my_file != nullptr)
     {
         result = fread(&value, sizeof(byte), 1, my_file) == 1;
-
         my_status = ferror(my_file);
     }
 
@@ -100,7 +99,6 @@ inline bool file_data_provider::put(const byte& value)
     if(my_status == 0 && my_file != nullptr)
     {
         result = fwrite(&value, 1, sizeof(byte), my_file) == sizeof(byte);
-
         my_status = ferror(my_file);
     }
 

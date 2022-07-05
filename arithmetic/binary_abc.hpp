@@ -34,7 +34,7 @@ inline binary_abc<ElementType>::binary_abc()
 template <typename ElementType>
 inline const typename binary_abc<ElementType>::elements_type& binary_abc<ElementType>::data() const
 {
-    static elements_type abc = { '0', '1' };
+    static elements_type abc = { L'0', L'1' };
     return abc;
 }
 

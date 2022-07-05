@@ -81,7 +81,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
     std::size_t org_size = 0;
     std::size_t enc_size = 0;
 
-    integer_type R = (*model).r();
+    integer_type r = (*model).r(); // R
 
     integer_type a = 0;
     integer_type b = my_whole;
@@ -119,8 +119,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
             break;
         }
 
-        b = a + (w * d) / R;
-        a = a + (w * c) / R;
+        b = a + (w * d) / r;
+        a = a + (w * c) / r;
 
         // rescale and emit
         while(b < my_half || a > my_half)

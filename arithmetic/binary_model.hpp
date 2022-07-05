@@ -11,6 +11,8 @@ BEGIN_NAMESPACE(compression::arithmetic)
 template <typename ElementType, typename IntegerType>
 class binary_model : public model<ElementType, IntegerType>
 {
+    // cv - characteristic vector
+
     public:
         using integer_type = model<ElementType, IntegerType>::integer_type;
         using element_type = model<ElementType, IntegerType>::element_type;
@@ -22,12 +24,17 @@ class binary_model : public model<ElementType, IntegerType>
 
         using probability_type = std::vector<integer_type>;
 
+        using slice_type = std::vector<int8_t>;
+        using slices_type = std::vector<slice_type>;
+
     private:
         probability_type    my_p;
 
-        double    my_p1; //??
-        double    my_f; //??
+        //double    my_p1; //??
+        //double    my_f; //??
         //int       my_scale_factor;
+
+        probability_type    my_lap; // look ahead probabilities
 
         probability_type    my_c;
         probability_type    my_d;
@@ -61,6 +68,8 @@ class binary_model : public model<ElementType, IntegerType>
         abc_type            abc() const override;
 
         element_type        symbol_by_index(index_type index) override;
+
+        void                calculate_lap(const slices_type& slices);
 
         void                update(const element_type& symbol) override;
         void                reset() override;
@@ -124,9 +133,16 @@ inline typename binary_model<ElementType, IntegerType>::element_type binary_mode
 }
 
 template <typename ElementType, typename IntegerType>
+inline void binary_model<ElementType, IntegerType>::calculate_lap(const slices_type& slices)
+{
+    my_lap.clear();
+}
+
+template <typename ElementType, typename IntegerType>
 inline void binary_model<ElementType, IntegerType>::update(const element_type& symbol)
 {
     auto p1 = static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * 32768);
+    //auto p1 = my_p[0];//??static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * 32768);
 
     if(p1 > 32768)
     //if(p1 >= 32768)
@@ -134,34 +150,58 @@ inline void binary_model<ElementType, IntegerType>::update(const element_type& s
         return; //??
     }
 
-    //if(symbol == '0')
-    //    my_0count++;
-    //else if(symbol == '1')
-    //    my_1count++;
-    //p1 = (integer_type)((double(my_1count) / double(my_0count + my_1count)) * 32768);
-
-    //if(symbol == '0')
-    //    my_p1 *= my_f;
-    //else if(symbol == '1')
-    //    my_p1 = my_p1 * my_f + (1.0 - my_f);
-    //p1 = (integer_type)(my_p1 * 32768);
-
-    //if(symbol == '0')
-    //    my_p1 -= my_p1 >> 5;
-    //else if(symbol == '1')
-    //    my_p1 += (my_scale_factor - my_p1) >> 5;
-    //p1 = (integer_type)(my_p1);//?? * 32768);
-
     if(symbol == '1')
     {
         my_1count--;
     }
     my_len--;
 
-    //if(my_len == 1)
-    //    update_model({ 2, 32766 });
-    //else
-        update_model({ 32768 - p1, p1 });
+    //static int k = 0;
+    // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+    // 0 0 0 0 0 0 1 0 1 0 1  0  0  0  0  1
+    //switch(k)
+    //{
+    //    case 1:
+    //    case 2:
+    //    case 3:
+    //    case 4:
+    //        p1 = 2;
+    //        break;
+    //    case 5:
+    //        p1 = 32766;
+    //        break;
+    //    case 6:
+    //        p1 = 2;
+    //        break;
+    //    case 7:
+    //        p1 = 32766;
+    //        break;
+    //    case 8:
+    //        p1 = 2;
+    //        break;
+    //    case 9:
+    //        p1 = 32766;
+    //        break;
+    //    case 10:
+    //    case 11:
+    //    case 12:
+    //    case 13:
+    //        p1 = 2;
+    //        break;
+    //    case 14:
+    //        p1 = 32766;
+    //        break;
+    //    case 15:
+    //        p1 = 32766;
+    //        break;
+    //}
+
+    //k++;
+
+    //if(k == 16)
+    //    k = 0;
+
+    update_model({ 32768 - p1, p1 });
 }
 
 template <typename ElementType, typename IntegerType>
@@ -182,7 +222,7 @@ inline void binary_model<ElementType, IntegerType>::update_model(const probabili
     {
         my_c[j] = p[0]; // r(0)
 
-        for(std::size_t k = 1; k < j; k++) // up to j-1
+        for(std::size_t k = 1; k < j - 1; k++) // up to j-1
         {
             my_c[j] += p[k];
         }
