@@ -56,6 +56,8 @@ class permutation : private noncopyable
                                             const multiset_elements_type& multiset_domain,
                                             const size_type multiset_size,
                                             elements_type& multiset);
+
+        static void         inversion_from_permutation(const elements_type& permutation, elements_type& inversion);
 };
 
 template <typename ElementType, typename RankType>
@@ -137,6 +139,29 @@ void permutation<ElementType, RankType>::unrank(typename permutation<ElementType
 }
 
 template <typename ElementType, typename RankType>
+void permutation<ElementType, RankType>::inversion_from_permutation(const typename permutation<ElementType, RankType>::elements_type& permutation0,
+                                                                    typename permutation<ElementType, RankType>::elements_type& inversion)
+{
+    inversion.clear();
+    inversion.resize(permutation0.size());
+
+    for(element_type k = 0; k < permutation0.size(); k++)
+    {
+        element_type val = 0;
+
+        for(element_type i = 0; permutation0[i] != k; i++)
+        {
+            if(k < permutation0[i])
+            {
+                val++;
+            }
+        }
+
+        inversion[k] = val;
+    }
+}
+
+template <typename ElementType, typename RankType>
 void permutation<ElementType, RankType>::generate_multiset_permutation(typename permutation<ElementType, RankType>::elements_type& multiset,
                                                                        std::vector<typename permutation<ElementType, RankType>::elements_type>& permutations)
 {
@@ -163,7 +188,7 @@ void permutation<ElementType, RankType>::generate_multiset_permutation(typename 
 
     for(const auto& element : multiset) // build h
     {
-        auto node(std::make_shared<node>());
+        auto node(std::make_shared<permutation::node>());
 
         (*node).value = element;
         (*node).next = h;
@@ -264,7 +289,7 @@ std::experimental::generator<typename permutation<ElementType, RankType>::elemen
 
         for(const auto& element : multiset) // build h
         {
-            auto node(std::make_shared<node>());
+            auto node(std::make_shared<permutation::node>());
 
             (*node).value = element;
             (*node).next = h;
