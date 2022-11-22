@@ -17,8 +17,8 @@ class decimal_model : public model<ElementType, IntegerType>
 
         using abc_type = model<ElementType, IntegerType>::abc_type;
 
-        using index_type = std::size_t;
-        using size_type = std::size_t;
+        using index_type = model<ElementType, IntegerType>::index_type;
+        using size_type = model<ElementType, IntegerType>::size_type;
 
         using probability_type = std::vector<integer_type>;
 
@@ -242,11 +242,11 @@ inline void decimal_model<ElementType, IntegerType>::update_model(const probabil
 
     my_c[0] = 0;
 
-    for(std::size_t j = 1, n = p.size(); j < n; j++)
+    for(index_type j = 1, n = p.size(); j < n; j++)
     {
         my_c[j] = p[0]; // r(0)
 
-        for(std::size_t k = 1; k < j; k++) // up to j-1
+        for(index_type k = 1; k <= j - 1; k++) // up to j-1
         {
             my_c[j] += p[k];
         }
@@ -255,7 +255,7 @@ inline void decimal_model<ElementType, IntegerType>::update_model(const probabil
     // d(j) = c(j) + r(j) for j = 1, ..., n
     my_d.resize(p.size());
 
-    for(std::size_t j = 0, n = p.size(); j < n; j++)
+    for(index_type j = 0, n = p.size(); j < n; j++)
     {
         my_d[j] = my_c[j] + p[j];
     }

@@ -45,20 +45,20 @@ class codec
         bool                encode(const model_type& model,
                                    const input_stream_type& input_stream,
                                    const output_stream_type& output_stream,
-                                   std::size_t& original_size,
-                                   std::size_t& encoded_size);
+                                   integer_type& original_size,
+                                   integer_type& encoded_size);
 
         bool                decode(const model_type& model,
                                    const input_stream_type& input_stream,
                                    const output_stream_type& output_stream,
-                                   std::size_t original_size);
+                                   integer_type original_size);
 };
 
 template <typename ElementType, typename IntegerType, typename InputStream, typename OutputStream>
 inline codec<ElementType, IntegerType, InputStream, OutputStream>::codec()
 {
     my_precision = std::numeric_limits<integer_type>::digits / 2;
-    my_whole = 1 << my_precision;
+    my_whole = static_cast<integer_type>(1) << my_precision;
     my_half = my_whole / 2;
     my_quarter = my_whole / 4;
     my_quarter3 = 3 * my_quarter;
@@ -68,8 +68,8 @@ template <typename ElementType, typename IntegerType, typename InputStream, type
 inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(const model_type& model,
                                                                                const input_stream_type& input_stream,
                                                                                const output_stream_type& output_stream,
-                                                                               std::size_t& original_size,
-                                                                               std::size_t& encoded_size)
+                                                                               integer_type& original_size,
+                                                                               integer_type& encoded_size)
 {
     original_size = 0;
     encoded_size = 0;
@@ -78,8 +78,8 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
 
     bool result = true;
 
-    std::size_t org_size = 0;
-    std::size_t enc_size = 0;
+    integer_type org_size = 0;
+    integer_type enc_size = 0;
 
     integer_type r = (*model).r(); // R
 
@@ -88,7 +88,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
 
     integer_type w = 0; // b - a, interval width
 
-    std::size_t s = 0; // number of middle-splits
+    integer_type s = 0; // number of middle-splits
 
     integer_type c = 0;
     integer_type d = 0;
@@ -132,7 +132,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
                 enc_size++;
 
                 // emit s ones
-                for(int k = 0; k < s; k++)
+                for(integer_type k = 0; k < s; k++)
                 {
                     (*output_stream).write(static_cast<bit>(1));
                     enc_size++;
@@ -151,7 +151,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
                 enc_size++;
 
                 // emit s zeros
-                for(int k = 0; k < s; k++)
+                for(integer_type k = 0; k < s; k++)
                 {
                     (*output_stream).write(static_cast<bit>(0));
                     enc_size++;
@@ -184,7 +184,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
         enc_size++;
 
         // emit s ones
-        for(int k = 0; k < s; k++)
+        for(integer_type k = 0; k < s; k++)
         {
             (*output_stream).write(static_cast<bit>(1));
             enc_size++;
@@ -197,7 +197,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::encode(c
         enc_size++;
 
         // emit s zeros
-        for(int k = 0; k < s; k++)
+        for(integer_type k = 0; k < s; k++)
         {
             (*output_stream).write(static_cast<bit>(0));
             enc_size++;
@@ -217,18 +217,18 @@ template <typename ElementType, typename IntegerType, typename InputStream, type
 inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(const model_type& model,
                                                                                const input_stream_type& input_stream,
                                                                                const output_stream_type& output_stream,
-                                                                               std::size_t original_size)
+                                                                               integer_type original_size)
 {
     (*model).reset();
 
     bool result = true;
 
-    element_type symbol;
-
     integer_type z = 0; // approximation
 
     // collect up to min(precision, M) symbols
-    std::size_t i = 1; // important to start from 1
+    integer_type i = 1; // important to start from 1
+
+    element_type symbol;
 
     while(i <= my_precision)
     {
@@ -244,7 +244,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
         //if(symbol == 1)
 #endif
         {
-            z = z + (1 << (my_precision - i));
+            z = z + (static_cast<integer_type>(1) << (my_precision - i));
         }
 
         i++;
@@ -253,10 +253,10 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
 //int onesss = 0; //??
 
     // abc
-    std::size_t abc_size = (*(*model).abc()).data().size();
+    integer_type abc_size = static_cast<integer_type>((*(*model).abc()).data().size());
 
     // decode
-    std::size_t decoded_size = 0;
+    integer_type decoded_size = 0;
 
     integer_type R = (*model).r();
 
@@ -268,7 +268,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
 
     integer_type w = 0; // b - a, interval width
 
-    std::size_t s = 0; // number of middle-splits
+    integer_type s = 0; // number of middle-splits
 
     integer_type c = 0;
     integer_type d = 0;
@@ -276,7 +276,7 @@ inline bool codec<ElementType, IntegerType, InputStream, OutputStream>::decode(c
     for(;;)
     {
         // decode symbol
-        for(std::size_t j = 0, n = abc_size; j < n; j++) // over all alphabet symbols (chunks)
+        for(integer_type j = 0, n = abc_size; j < n; j++) // over all alphabet symbols (chunks)
         {
             w = b - a;
 

@@ -78,9 +78,10 @@ inline bool codec<ElementType, IntegerType, KeyType, ValueType, InputStream, Out
     std::size_t org_size = 0;
     std::size_t enc_size = 0;
 
-    value_type next_code = static_cast<value_type>((*model).codes().size());
+    value_type next_code = 500;//??static_cast<value_type>((*model).codes().size());
 
     std::basic_string<element_type> current_string;
+    std::basic_string<element_type> working_string;
 
     element_type symbol;
 
@@ -95,19 +96,32 @@ inline bool codec<ElementType, IntegerType, KeyType, ValueType, InputStream, Out
 
         org_size++;
 
-        current_string = current_string + symbol;
+        working_string = current_string + symbol;
 
-        if((*model).codes().find(current_string) == (*model).codes().end())
+        if((*model).codes().find(working_string) != (*model).codes().end())
         {
-            (*model).codes()[current_string] = next_code++;
-
-            current_string.erase(current_string.size() - 1);
-
-            enc_size++;
-            (*output_stream).write((*model).codes()[current_string]);
-
-            current_string = symbol;
+             current_string = working_string;
         }
+        else
+        {
+auto index = (*model).codes()[current_string];
+            (*output_stream).write((char_type)(*model).codes()[current_string]);
+            (*model).codes()[working_string] = next_code++;
+            current_string = symbol;
+            enc_size++;
+        }
+
+        //if((*model).codes().find(working_string) == (*model).codes().end())
+        //{
+        //    (*model).codes()[current_string] = next_code++;
+
+        //    current_string.erase(current_string.size() - 1);
+
+        //    enc_size++;
+        //    (*output_stream).write((*model).codes()[current_string]);
+
+        //    current_string = symbol;
+        //}
     }
 
     if(!current_string.empty())
@@ -162,12 +176,15 @@ inline bool codec<ElementType, IntegerType, KeyType, ValueType, InputStream, Out
 
     while(!(*input_stream).eos())
     {
-        if(!(*input_stream).read(code))
+        uint8_t ch;
+        if(!(*input_stream).read(ch))
         {
             // if !result - report error and exit
             result = (*input_stream).eos();
             break;
         }
+
+        code = ch;
 
         org_size++;
 

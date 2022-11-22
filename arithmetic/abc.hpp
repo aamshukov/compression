@@ -6,8 +6,7 @@
 
 #pragma once
 
-BEGIN_NAMESPACE(compression::arithmetic)
-USINGNAMESPACE(compression)
+BEGIN_NAMESPACE(compression)
 
 template <typename ElementType>
 interface abc : private noncopyable
@@ -20,7 +19,7 @@ interface abc : private noncopyable
     virtual const elements_type& data() const = 0;
 
     virtual index_type index_by_symbol(const element_type& symbol) = 0;
-    virtual element_type symbol_by_index(std::size_t index) = 0;
+    virtual element_type symbol_by_index(index_type index) = 0;
 };
 
 END_NAMESPACE

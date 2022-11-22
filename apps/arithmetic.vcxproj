@@ -173,7 +173,7 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..;$(SolutionDir)..\libs\ICU\icu4c-60_2\include;$(SolutionDir)..\libs\precision</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..;D:\Projects\algorithms\src;$(SolutionDir)..\libs\ICU\icu4c-60_2\include;$(SolutionDir)..\libs\precision</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeaderFile>core/pch.hpp</PrecompiledHeaderFile>
@@ -234,11 +234,13 @@ xcopy $(SolutionDir)..\libs\ICU\icu4c-60_2\bin64\*.dll $(SolutionDir)..\build\$(
     <ClInclude Include="..\arithmetic\codec.hpp" />
     <ClInclude Include="..\arithmetic\decimal_abc.hpp" />
     <ClInclude Include="..\arithmetic\decimal_model.hpp" />
+    <ClInclude Include="..\arithmetic\english_abc.hpp" />
     <ClInclude Include="..\arithmetic\model.hpp" />
     <ClInclude Include="..\arithmetic\simple_abc.hpp" />
     <ClInclude Include="..\arithmetic\simple_model.hpp" />
     <ClInclude Include="..\core\noncopyable.hpp" />
     <ClInclude Include="..\core\pch.hpp" />
+    <ClInclude Include="..\distance_coding\codec.hpp" />
     <ClInclude Include="..\streams\data_provider.hpp" />
     <ClInclude Include="..\streams\file_data_provider.hpp" />
     <ClInclude Include="..\streams\icu_file_data_provider.hpp" />

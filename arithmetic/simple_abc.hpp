@@ -23,7 +23,7 @@ class simple_abc : public abc<ElementType>
         const elements_type&    data() const;
 
         index_type              index_by_symbol(const element_type& symbol) override;
-        element_type            symbol_by_index(std::size_t index) override;
+        element_type            symbol_by_index(index_type index) override;
 };
 
 template <typename ElementType>
@@ -64,7 +64,7 @@ inline typename simple_abc<ElementType>::index_type simple_abc<ElementType>::ind
 }
 
 template <typename ElementType>
-inline typename simple_abc<ElementType>::element_type simple_abc<ElementType>::symbol_by_index(std::size_t index)
+inline typename simple_abc<ElementType>::element_type simple_abc<ElementType>::symbol_by_index(index_type index)
 {
     element_type result = data()[index];
     return result;

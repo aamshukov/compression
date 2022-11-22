@@ -64,6 +64,7 @@
 #include <locale>
 
 #include <string>
+#include <string_view>
 #include <charconv>
 #include <array>
 #include <valarray>

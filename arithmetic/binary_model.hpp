@@ -19,8 +19,8 @@ class binary_model : public model<ElementType, IntegerType>
 
         using abc_type = model<ElementType, IntegerType>::abc_type;
 
-        using index_type = std::size_t;
-        using size_type = std::size_t;
+        using index_type = model<ElementType, IntegerType>::index_type;
+        using size_type = model<ElementType, IntegerType>::size_type;
 
         using probability_type = std::vector<integer_type>;
 
@@ -29,12 +29,7 @@ class binary_model : public model<ElementType, IntegerType>
 
     private:
         probability_type    my_p;
-
-        //double    my_p1; //??
-        //double    my_f; //??
-        //int       my_scale_factor;
-
-        probability_type    my_lap; // look ahead probabilities
+        integer_type        my_space; // 32768 ...
 
         probability_type    my_c;
         probability_type    my_d;
@@ -44,15 +39,14 @@ class binary_model : public model<ElementType, IntegerType>
         abc_type            my_abc;
 
         size_type           my_len;
-
-        size_type           my_0count; //??
         size_type           my_1count;
 
     private:
         void                update_model(const probability_type& p);
 
     public:
-                            binary_model(const probability_type& p, // probability
+                            binary_model(const probability_type& probability,
+                                         const integer_type& space,
                                          const abc_type& abc,
                                          size_type input_length,
                                          size_type ones_count);
@@ -69,22 +63,19 @@ class binary_model : public model<ElementType, IntegerType>
 
         element_type        symbol_by_index(index_type index) override;
 
-        void                calculate_lap(const slices_type& slices);
-
         void                update(const element_type& symbol) override;
         void                reset() override;
 };
 
 template <typename ElementType, typename IntegerType>
-inline binary_model<ElementType, IntegerType>::binary_model(const probability_type& p,
+inline binary_model<ElementType, IntegerType>::binary_model(const probability_type& probability,
+                                                            const integer_type& space,
                                                             const abc_type& abc,
                                                             size_type input_length,
                                                             size_type ones_count)
-    : my_r(0), my_abc(abc), my_len(input_length), my_0count(1), my_1count(ones_count)
-      //my_1count(1), my_f(1.0 - (1.0 / 32.0)), my_p1(0.5)
-{     //??
-    ;
-    update_model(p);
+    : my_space(space), my_r(0), my_abc(abc), my_len(input_length), my_1count(ones_count)
+{
+    update_model(probability);
 }
 
 template <typename ElementType, typename IntegerType>
@@ -133,19 +124,11 @@ inline typename binary_model<ElementType, IntegerType>::element_type binary_mode
 }
 
 template <typename ElementType, typename IntegerType>
-inline void binary_model<ElementType, IntegerType>::calculate_lap(const slices_type& slices)
-{
-    my_lap.clear();
-}
-
-template <typename ElementType, typename IntegerType>
 inline void binary_model<ElementType, IntegerType>::update(const element_type& symbol)
 {
-    auto p1 = static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * 32768);
-    //auto p1 = my_p[0];//??static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * 32768);
+    auto p1 = static_cast<integer_type>((static_cast<double>(my_1count) / my_len) * my_space);
 
-    if(p1 > 32768)
-    //if(p1 >= 32768)
+    if(p1 > my_space)
     {
         return; //??
     }
@@ -154,54 +137,10 @@ inline void binary_model<ElementType, IntegerType>::update(const element_type& s
     {
         my_1count--;
     }
+
     my_len--;
 
-    //static int k = 0;
-    // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
-    // 0 0 0 0 0 0 1 0 1 0 1  0  0  0  0  1
-    //switch(k)
-    //{
-    //    case 1:
-    //    case 2:
-    //    case 3:
-    //    case 4:
-    //        p1 = 2;
-    //        break;
-    //    case 5:
-    //        p1 = 32766;
-    //        break;
-    //    case 6:
-    //        p1 = 2;
-    //        break;
-    //    case 7:
-    //        p1 = 32766;
-    //        break;
-    //    case 8:
-    //        p1 = 2;
-    //        break;
-    //    case 9:
-    //        p1 = 32766;
-    //        break;
-    //    case 10:
-    //    case 11:
-    //    case 12:
-    //    case 13:
-    //        p1 = 2;
-    //        break;
-    //    case 14:
-    //        p1 = 32766;
-    //        break;
-    //    case 15:
-    //        p1 = 32766;
-    //        break;
-    //}
-
-    //k++;
-
-    //if(k == 16)
-    //    k = 0;
-
-    update_model({ 32768 - p1, p1 });
+    update_model({ my_space - p1, p1 });
 }
 
 template <typename ElementType, typename IntegerType>
@@ -218,11 +157,11 @@ inline void binary_model<ElementType, IntegerType>::update_model(const probabili
 
     my_c[0] = 0;
 
-    for(std::size_t j = 1, n = p.size(); j < n; j++)
+    for(index_type j = 1, n = p.size(); j < n; j++)
     {
         my_c[j] = p[0]; // r(0)
 
-        for(std::size_t k = 1; k < j - 1; k++) // up to j-1
+        for(index_type k = 1; k <= j - 1; k++) // up to j-1
         {
             my_c[j] += p[k];
         }
@@ -231,7 +170,7 @@ inline void binary_model<ElementType, IntegerType>::update_model(const probabili
     // d(j) = c(j) + r(j) for j = 1, ..., n
     my_d.resize(p.size());
 
-    for(std::size_t j = 0, n = p.size(); j < n; j++)
+    for(index_type j = 0, n = p.size(); j < n; j++)
     {
         my_d[j] = my_c[j] + p[j];
     }

@@ -31,6 +31,21 @@
     <Filter Include="algorithms\codes">
       <UniqueIdentifier>{5b4c58b2-070a-44b7-bd35-dcd748bbd8ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="arithmetic\binary">
+      <UniqueIdentifier>{e2fd13b1-3ca2-480e-8bd9-3b73a0976689}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="arithmetic\decimal">
+      <UniqueIdentifier>{5f5a52fd-99dd-4497-9045-71c9634b3b39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="arithmetic\simple">
+      <UniqueIdentifier>{f8296b1f-e76f-4300-81cf-963b5c2a9753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="distance_coding">
+      <UniqueIdentifier>{cae60954-b6ff-474e-a2f5-a434fa5289af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="arithmetic\english">
+      <UniqueIdentifier>{278532d4-0ae6-4b62-b9f4-3a32c0cacb0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\core\pch.hpp">
@@ -87,22 +102,7 @@
     <ClInclude Include="..\arithmetic\codec.hpp">
       <Filter>arithmetic</Filter>
     </ClInclude>
-    <ClInclude Include="..\arithmetic\simple_model.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
     <ClInclude Include="..\arithmetic\model.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\arithmetic\simple_abc.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\arithmetic\abc.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\arithmetic\binary_model.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\arithmetic\binary_abc.hpp">
       <Filter>arithmetic</Filter>
     </ClInclude>
     <ClInclude Include="..\algorithms\permutation\permutation.hpp">
@@ -111,14 +111,35 @@
     <ClInclude Include="..\algorithms\permutation\permutation_entropy.hpp">
       <Filter>algorithms\permutation</Filter>
     </ClInclude>
-    <ClInclude Include="..\arithmetic\decimal_abc.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\arithmetic\decimal_model.hpp">
-      <Filter>arithmetic</Filter>
-    </ClInclude>
     <ClInclude Include="..\algorithms\codes\codes.hpp">
       <Filter>algorithms\codes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\binary_abc.hpp">
+      <Filter>arithmetic\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\binary_model.hpp">
+      <Filter>arithmetic\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\decimal_abc.hpp">
+      <Filter>arithmetic\decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\decimal_model.hpp">
+      <Filter>arithmetic\decimal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\simple_abc.hpp">
+      <Filter>arithmetic\simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\simple_model.hpp">
+      <Filter>arithmetic\simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\abc.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\distance_coding\codec.hpp">
+      <Filter>distance_coding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\arithmetic\english_abc.hpp">
+      <Filter>arithmetic\english</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
