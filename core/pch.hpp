@@ -62,6 +62,7 @@
 #include <utility>
 #include <limits>
 #include <locale>
+#include <random>
 
 #include <string>
 #include <string_view>
