@@ -146,7 +146,7 @@ void codes<ElementType>::encode_centered_binary_in_range(const typename codes<El
                                                          const typename codes<ElementType>::size_type& hi,
                                                          string_type& result)
 {
-    //encode_centered_minimal_binary(x - lo + 1, hi - lo + 1, result);
+    // encode_centered_minimal_binary(x - lo + 1, hi - lo + 1, result);
     result += encode_minimal_binary(x - lo + 1, hi - lo + 1);
 }
 

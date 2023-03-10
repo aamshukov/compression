@@ -70,7 +70,7 @@ inline bool bwt<ElementType, Traits>::decode(const typename bwt<ElementType, Tra
     // https://www.student.cs.uwaterloo.ca/~cs240/f18/modules/module10.pdf
     //
     // BWT-decoding(C[0..n − 1])
-    //  C: string of characters over alphabet Σc
+    //  C: string of characters over alphabet Σc
     //  A <- array of size n
     //  for i = 0 to n − 1
     //      A[i] <- (C[i], i)
