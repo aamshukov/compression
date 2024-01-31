@@ -131,7 +131,10 @@ void permutation<ElementType, RankType>::unrank(typename permutation<ElementType
     // unrank
     while(n > 0)
     {
-        std::swap(p[n - 1], p[static_cast<element_type>(r % n)]);
+        auto j = n - 1;
+        auto k = static_cast<element_type>(r % n);
+
+        std::swap(p[j], p[k]);
 
         r /= n;
         n--;
